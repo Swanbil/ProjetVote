@@ -1,17 +1,32 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HelloWorld msg="TestSachour Vue.js App"/>
+    <button @click="getAllUsers">TEST</button>
+    {{msg}}
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  data() {
+      return {
+          msg: '',
+      }
+  },
+  methods: {
+    async getAllUsers() {
+      let res = await fetch('/api/users')
+      var data = await res.json();
+      console.log(data)
+      this.msg = data.mess
+      
+    },
   }
 }
 </script>

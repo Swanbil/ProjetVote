@@ -2,8 +2,6 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <button @click="getAllUsers">GET</button>
-    {{msg}}
   </div>
 </template>
 
@@ -14,20 +12,6 @@ export default {
   name: 'App',
   components: {
     HelloWorld
-  },
-  data() {
-      return {
-          msg: '',
-      }
-  },
-  methods: {
-    async getAllUsers() {
-      let res = await fetch('/api/users')
-      var data = await res.json();
-      console.log(data)
-      this.msg = data.mess
-      
-    },
   }
 }
 </script>

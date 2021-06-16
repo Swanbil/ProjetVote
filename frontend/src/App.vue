@@ -4,7 +4,7 @@
     
     <router-view></router-view>
     
-    {{msg}}
+    <h1>{{msg}}</h1>
   </div>
 </template>
 

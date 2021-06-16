@@ -1,12 +1,20 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="vote">
+    <h1>{{ title }}</h1>
+    <p>Here, you can vote</p>
+    
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TestSacha',
+  name: 'Vote',
+  data(){
+    return{
+      title:'Vote'
+    }
+    
+  },
   props: {
     msg: String
   }

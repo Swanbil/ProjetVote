@@ -1,33 +1,26 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="TestSachour Vue.js App"/>
-    <button @click="getAllUsers">TEST</button>
+    <NavBar></NavBar>
+    
+    <router-view></router-view>
+    
     {{msg}}
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NavBar from './components/NavBar.vue'
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  components:{
+    NavBar
   },
   data() {
       return {
           msg: '',
       }
   },
-  methods: {
-    async getAllUsers() {
-      let res = await fetch('/api/users')
-      var data = await res.json();
-      console.log(data)
-      this.msg = data.mess
-      
-    },
-  }
+  
 }
 </script>
 
@@ -36,8 +29,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+
 }
 </style>

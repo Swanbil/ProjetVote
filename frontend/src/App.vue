@@ -1,27 +1,33 @@
 <template>
   <div id="app">
-    <NavBar></NavBar>
-    
-    <router-view></router-view>
-    
-    <h1>{{msg}}</h1>
+    <body>
+      <div id="page-container">
+        <NavBar></NavBar>
+        <div id="content-wrap">
+          <router-view class="container"></router-view>
+        </div>
+        <Footer id="footer"></Footer>
+      </div>
+    </body>
+    >
   </div>
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
+import NavBar from "./components/NavBar.vue";
+import Footer from "./components/Footer.vue";
 export default {
-  name: 'App',
-  components:{
-    NavBar
+  name: "App",
+  components: {
+    NavBar,
+    Footer,
   },
   data() {
-      return {
-          msg: '',
-      }
+    return {
+      msg: "",
+    };
   },
-  
-}
+};
 </script>
 
 <style>
@@ -30,6 +36,24 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  text-align: center;
+  position: relative;
+  min-height: 50vh;
+}
 
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;            /* Footer height */
 }
 </style>

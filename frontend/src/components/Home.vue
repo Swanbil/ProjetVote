@@ -1,11 +1,14 @@
 <template>
   <div class="home">
     <h1>{{ title }}</h1>
+    <p>Here, you can see all the news</p>
     <div class="btn">
-      <button @click="getAllUsers">TEST</button>
+      <b-button @click="getAllUsers" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="dark">Test</b-button>
     </div>
     
+    
     {{msg}}
+    
     
   </div>
 </template>
@@ -16,7 +19,8 @@ export default {
   data(){
     return{
       title:'Home',
-      msg:''
+      msg:'',
+      
     }
     
   },
@@ -34,28 +38,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.home{
+  text-align: center;
+}
 h1{
   text-align:center;
   margin-top:50px;
   font-weight: bold;
+  margin-bottom:5%;
   
-}
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
 }
 .btn{
   text-align: center;
   padding:5px;
+  width:40%;
 }
 </style>

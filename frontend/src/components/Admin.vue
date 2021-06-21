@@ -1,7 +1,7 @@
 <template>
   <div class="vote">
     <h1>{{ title }}</h1>
-    <p>Here, you can see the results or manage users</p>
+    <p>Here</p>
     
   </div>
 </template>

@@ -9,6 +9,7 @@
       <b-navbar-nav >
         <b-nav-item class="px-2"><router-link :to="{ name: 'Home' }" class="logo">Home</router-link></b-nav-item>
         <b-nav-item class="px-2"><router-link to="/vote">Vote</router-link></b-nav-item>
+        <b-nav-item class="px-2"><router-link to="/PageAdmin">Admin</router-link></b-nav-item>
       </b-navbar-nav>
 
        <b-navbar-nav class="ms-auto">
@@ -16,7 +17,6 @@
             <router-link to="/login" class="btn-log" >Se connecter</router-link>
           </b-button>
       </b-navbar-nav>
-
     </b-collapse>
   </b-navbar>
 </div> 

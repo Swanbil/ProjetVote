@@ -33,17 +33,20 @@ export default {
     };
   },
   methods: {
-    beforeCreate(){
-      const cookieLog =Cookies.get('connect.sid')
-      if(cookieLog !==''){
-        this.isLog = true
-      }
-    },
+    
     onChangeLog(value) {
       this.isLog = value;
       console.log("user est connecté depuis le parent = ", this.isLog);
     },
   },
+  //check while refreshing that the user is always connected
+  mounted(){
+      const cookieLog =Cookies.get('connect.sid')
+      if(cookieLog !==undefined){
+        this.isLog = true
+      }
+      
+    },
 };
 </script>
 

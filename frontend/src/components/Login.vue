@@ -67,11 +67,8 @@ export default {
         
       }
       catch (error){
-        console.log(error.response.data)
         this.response = error.response.data.message;
       }
-      
-      
     },
   },
 };

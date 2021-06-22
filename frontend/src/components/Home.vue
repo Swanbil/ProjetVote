@@ -1,56 +1,63 @@
 <template>
   <div class="home">
+    
+    
     <h1>{{ title }}</h1>
     <p>Here, you can see all the news</p>
-    <div class="btn">
-      <b-button @click="getAllUsers" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="dark">Test</b-button>
+
+    <div class="news">
+      <New></New>
+      <New></New>
+      <New></New>
     </div>
-    
-    
-    {{msg}}
-    
-    
   </div>
 </template>
 
 <script>
+import New from "./News.vue";
 export default {
-  name: 'Home',
-  data(){
-    return{
-      title:'Home',
-      msg:'',
-      
-    }
-    
+  name: "Home",
+  components: {
+    New,
   },
-  methods:{
-    async getAllUsers() {
-      let res = await fetch('/api/users')
-      var data = await res.json();
-      console.log(data)
-      this.msg = data.mess
-    }
+  data() {
+    return {
+      title: "Home",
+      msg: "",
+    };
   },
-  
-}
+  methods: {},
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
-.home{
+.home {
   text-align: center;
 }
-h1{
-  text-align:center;
-  margin-top:50px;
+
+h1 {
+  text-align: center;
+  margin-top: 50px;
   font-weight: bold;
-  margin-bottom:5%;
-  
+  margin-bottom: 5%;
 }
-.btn{
+.btn {
   text-align: center;
-  padding:5px;
-  width:40%;
+  padding: 5px;
+  width: 40%;
+}
+.news {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin:3%;
+
+}
+@media (max-width: 1250px) {
+    
+  .news {
+    align-items: center;
+  }
 }
 </style>

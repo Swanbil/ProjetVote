@@ -1,44 +1,61 @@
 <template>
   <div class="login-form">
-    <form action="/examples/actions/confirmation.php" method="post">
+    
         <h2 class="text-center">Inscription</h2>       
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Numero electeur" required="required">
+            <input type="text" v-model="newUser.numElec" class="form-control" placeholder="Numero electeur" required="required">
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Nom" required="required">
+            <input type="text" v-model="newUser.lastName" class="form-control" placeholder="Nom" required="required">
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Prenom" required="required">
+            <input type="text" v-model="newUser.name" class="form-control" placeholder="Prenom" required="required">
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="email" required="required">
+            <input type="text" v-model="newUser.email" class="form-control" placeholder="email" required="required">
         </div>
         
         <div class="form-group">
-            <input type="password" class="form-control" placeholder="Mot de passe" required="required">
+            <input type="password" v-model="newUser.password" class="form-control" placeholder="Mot de passe" required="required">
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-block">Inscription</button>
+            <button type="submit" @click="registerUser()" class="btn btn-block">Inscription</button>
+        </div>
+        
+        <div class="response">
+            {{response}}
         </div>
                
-    </form>
+    
     
 </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'Login',
   data(){
     return{
-      title:'Login',
-      msg:''
+      title:'Inscription',
+      newUser:{
+          numElec:'',
+          lastName:'',
+          name:'',
+          email:'',
+          password:''
+
+      },
+      response:''
     }
     
   },
   methods:{
-    
+    async registerUser(){
+        console.log(this.newUser);
+        const response = await axios.post('/api/register',this.newUser)
+        this.response = response.data
+    }
   },
   
 }
@@ -80,6 +97,12 @@ export default {
 .clearfix{
     text-decoration:none;
 }
+.response{
+    text-align: center;
+    background-color:rgb(196, 105, 105);
+    font-weight:bold;
+}
+
 @media (max-width: 1250px) {
     .login-form {
     width: 80%; 	

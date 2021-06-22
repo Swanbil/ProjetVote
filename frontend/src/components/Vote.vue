@@ -1,7 +1,9 @@
 <template>
   <div class="vote">
     <h1>{{ title }}</h1>
-    <p>Here, you can vote</p>
+    <p v-if="isLog">Here, you can vote</p>
+    <p v-else>Connect to your account if you want to vote</p>
+
     
   </div>
 </template>
@@ -16,12 +18,12 @@ export default {
     
   },
   props: {
-    msg: String
+    isLog: Boolean
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
 h1{
   text-align:center;

@@ -12,21 +12,41 @@
       </b-navbar-nav>
 
        <b-navbar-nav class="ms-auto">
-          <b-button size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="light">
-            <router-link to="/login" class="btn-log" >Se connecter</router-link>
+          <b-button  v-if="!isLog" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="light">
+            <router-link to="/login" class="btn-log" >Connexion</router-link>
+          </b-button>
+          <b-button v-else  @click="logOut()" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="light">
+            Deconnexion
           </b-button>
       </b-navbar-nav>
 
     </b-collapse>
   </b-navbar>
+  
 </div> 
   
 </template>
 
 
 <script>
+import Cookies from 'js-cookie';
 export default {
   name: "NavBar",
+  props:{
+    isLog: Boolean
+  },
+  data(){
+    return{
+      stateIsLog:false
+    };
+  },
+  methods:{
+    logOut(){
+      this.stateIsLog = false
+      Cookies.remove('connect.sid')
+      this.$emit('clicked', this.stateIsLog)
+    }
+  }
 };
 </script>
 

@@ -2,20 +2,25 @@
   <div id="app">
     <body>
       <div id="page-container">
-        <NavBar></NavBar>
+        <NavBar :isLog="isLog" @clicked="onChangeLog"></NavBar>
         <div id="content-wrap">
-          <router-view class="container"></router-view>
+          <router-view
+            class="container"
+            :isLog="isLog"
+            @clicked="onChangeLog"
+          ></router-view>
         </div>
         <Footer id="footer"></Footer>
       </div>
     </body>
-    >
   </div>
 </template>
 
 <script>
 import NavBar from "./components/NavBar.vue";
 import Footer from "./components/Footer.vue";
+import Cookies from 'js-cookie';
+
 export default {
   name: "App",
   components: {
@@ -24,8 +29,20 @@ export default {
   },
   data() {
     return {
-      msg: "",
+      isLog: false,
     };
+  },
+  methods: {
+    beforeCreate(){
+      const cookieLog =Cookies.get('connect.sid')
+      if(cookieLog !==''){
+        this.isLog = true
+      }
+    },
+    onChangeLog(value) {
+      this.isLog = value;
+      console.log("user est connecté depuis le parent = ", this.isLog);
+    },
   },
 };
 </script>
@@ -47,13 +64,13 @@ export default {
 }
 
 #content-wrap {
-  padding-bottom: 2.5rem;    /* Footer height */
+  padding-bottom: 2.5rem; /* Footer height */
 }
 
 #footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 2.5rem;            /* Footer height */
+  height: 2.5rem; /* Footer height */
 }
 </style>

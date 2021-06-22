@@ -15,7 +15,7 @@
           <b-button  v-if="!isLog" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="light">
             <router-link to="/login" class="btn-log" >Connexion</router-link>
           </b-button>
-          <b-button v-else  @click="logOut()" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="light">
+          <b-button v-else  @click="logOut()" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="secondary">
             Deconnexion
           </b-button>
       </b-navbar-nav>

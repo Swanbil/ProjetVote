@@ -80,20 +80,11 @@ app.post('/api/affElec', async(req, res) => {
 //Modifie election
 //Affichage des éléection pour les modifier
 app.post('/api/modElec', async(req, res) => {
-  const categorie = req.body.categorie
   const date = req.body.date
   const dateF = req.body.dateF
   const description = req.body.descri
-  const idelection=req.body.elections
-
-  console.log ("desctest" +" " + categorie);
-
-  const result = await client.query({
-    text: 'SELECT idcat FROM categorieelection WHERE electype =$1',
-    values: [categorie]
-  });
-  console.log(result.rows)
-
+  const idelection= req.body.idelection
+  console.log(idelection)
 
   const aff=await client.query({
       text: 'UPDATE election SET datedebut=$1, datefin=$2, description=$3 WHERE idelection =$4',

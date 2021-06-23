@@ -72,8 +72,8 @@
         {{election.idelection}}
         {{election.datedebut}}
         {{election.datefin}}
-        {{election.descrption}}
-        <button @click="modifieElec()">Modifier cette election</button>
+        {{election.description}}
+        <button @click="modifieElec(election.idelection)">Modifier cette election</button>
         <div id=elmod>
           <form @submit.prevent="mdElec()" method="POST">
 
@@ -108,6 +108,8 @@ export default {
       descri: '',
       affElec : '',
       elections : [],
+      modElec : '',
+      currentElection : '',
     }
     
   },
@@ -171,21 +173,23 @@ export default {
 
     },
 
-    modifieElec() {
+    modifieElec(idelection) {
       document.getElementById ("elmod").style.display="flex";
-
+      this.currentElection=idelection
     },
     
    //modif election
     async mdElec(){
-      console.log (this.categorie),
-      await axios.post('/api/modElec', {
+      console.log (this.categorie)
+      const modElec= await axios.post('/api/modElec', {
         date: this.date,
         dateF: this.dateF,
         categorie: this.categorie,
         descri: this.descri,
-        elections : this.elections
+        idelection : this.currentElection,
       });
+      console.log(modElec.data)
+      this.elections = modElec.data
     }
   }
 }

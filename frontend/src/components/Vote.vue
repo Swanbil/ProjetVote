@@ -1,8 +1,8 @@
 <template>
   <div class="vote">
     <h1>{{ title }}</h1>
-    <p v-if="isLog">Here, you can vote</p>
-    <p v-else>Connect to your account if you want to vote</p>
+    <p v-if="isLog && isAdmin">Here, you can vote</p>
+    <p v-else>Connect to your vote account if you want to vote</p>
 
     
   </div>
@@ -18,7 +18,8 @@ export default {
     
   },
   props: {
-    isLog: Boolean
+    isLog: Boolean,
+    isAdmin: Boolean
   }
 }
 </script>

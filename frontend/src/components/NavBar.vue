@@ -9,6 +9,7 @@
       <b-navbar-nav >
         <b-nav-item class="px-2"><router-link :to="{ name: 'Home' }" class="logo">Home</router-link></b-nav-item>
         <b-nav-item class="px-2"><router-link to="/vote">Vote</router-link></b-nav-item>
+        <b-nav-item v-if="isAdmin" class="px-2"><router-link to="/admin">Admin</router-link></b-nav-item>
       </b-navbar-nav>
 
        <b-navbar-nav class="ms-auto">
@@ -19,7 +20,6 @@
             Deconnexion
           </b-button>
       </b-navbar-nav>
-
     </b-collapse>
   </b-navbar>
   
@@ -33,7 +33,8 @@ import Cookies from 'js-cookie';
 export default {
   name: "NavBar",
   props:{
-    isLog: Boolean
+    isLog: Boolean,
+    isAdmin: Boolean
   },
   data(){
     return{
@@ -45,6 +46,7 @@ export default {
       this.stateIsLog = false
       Cookies.remove('connect.sid')
       this.$emit('clicked', this.stateIsLog)
+      this.$router.push({name:'Home'})
     }
   }
 };

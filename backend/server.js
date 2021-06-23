@@ -3,8 +3,8 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const app = express(),
-      bodyParser = require("body-parser");
-      port = 3080;
+  bodyParser = require("body-parser");
+port = 3080;
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
@@ -25,7 +25,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, maxAge:8*60*60*1000,httpOnly: false} //8hours
+  cookie: { secure: false, maxAge: 8 * 60 * 60 * 1000, httpOnly: false } //8hours
 }))
 app.use(express.static(path.join(__dirname, '../my-app/build')));
 
@@ -33,12 +33,7 @@ app.use(express.static(path.join(__dirname, '../my-app/build')));
 //All routes
 //-------------------------------------------------------------------
 
-app.get('/api/users', (req, res) => {
-  console.log('api/users called!')
-  res.json({mess:"la connexion avec le serveur marche"});
-});
-
-app.get('/', (req,res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
 });
 
@@ -61,11 +56,12 @@ app.post('/api/register', async (req, res) => {
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
     const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
+    //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,
-      values: [user.lastName,user.name,user.email,user.numElec,passwordHash,false]
+      values: [user.numElec, passwordHash, user.lastName, user.name, user.email]
     })
-    res.json({ message: 'Bienvenue '+user.name })
+    res.json({ message: 'Bienvenue ' + user.name })
   }
 })
 
@@ -76,11 +72,16 @@ app.post("/api/login", async (req, res) => {
     res.status(400).json({ message: 'Veuillez remplir tous les champs' })
     return
   }
-  
+
   const result = await client.query({
     text: 'SELECT COUNT(*) from votant WHERE numelec=$1',
     values: [user.numElec]
   })
+  const result2 = await client.query({
+    text: 'SELECT COUNT(*) from administrateur WHERE loginadmin=$1',
+    values: [user.numElec]
+  })
+  //cas user est un votant
   if (result.rows[0].count == 1) {
     const result = await client.query({
       text: 'SELECT * from votant WHERE numelec=$1',
@@ -93,8 +94,9 @@ app.post("/api/login", async (req, res) => {
       }
       else {
         req.session.userId = result.rows[0].idutilisateur
-        console.log("session=",req.session.userId)
-        res.json({message: 'Bienvenue '
+        res.json({
+          message: 'Bienvenue ',
+          isAdmin: false
         })
         console.log("Authentification réussie")
       }
@@ -105,6 +107,31 @@ app.post("/api/login", async (req, res) => {
     }
 
   }
+  //cas user est un administrateur
+  if (result2.rows[0].count == 1) {
+    const result = await client.query({
+      text: 'SELECT * from administrateur WHERE loginadmin=$1',
+      values: [user.numElec]
+    })
+    const passwordHash = result.rows[0].motdepasseadmin
+    if (await bcrypt.compare(user.password, passwordHash)) {
+      if (req.session.userId) {
+        res.status(401).json({ message: 'Utilisateur deja authentifié' })
+      }
+      else {
+        req.session.userId = result.rows[0].idutilisateur
+        res.json({
+          message: 'Bienvenue ',
+          isAdmin: true
+        })
+        console.log("Authentification réussie")
+      }
+    }
+    else {
+      res.status(401).json({ message: 'Mot de passe inconu' })
+      return
+    }
+  }
   else {
     res.status(401).json({ message: 'Cet utilisateur n existe pas' })
     return
@@ -114,5 +141,5 @@ app.post("/api/login", async (req, res) => {
 
 //define the port
 app.listen(port, () => {
-    console.log(`Server listening on the port::${port}`);
+  console.log(`Server listening on the port::${port}`);
 });

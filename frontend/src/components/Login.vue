@@ -53,16 +53,19 @@ export default {
         numElec: "",
         password: "",
       },
-      stateIsLog:false
+      stateIsLog:false,
+      stateIsAdmin:false
     };
   },
   methods: {
     async logUser() {
       try{
         const response = await axios.post("/api/login", this.user);
-        console.log(response.data.message)
+        console.log(response.data)
+        this.stateIsAdmin = response.data.isAdmin
         this.stateIsLog = true
         this.$emit('clicked', this.stateIsLog)
+        this.$emit('changeAdmin', this.stateIsAdmin)
         this.$router.push({name:'Home'})
         
       }

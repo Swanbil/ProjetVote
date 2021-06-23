@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import Vote from '@/components/Vote'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
+import Admin from '@/components/Admin'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
-    }
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
+    },
   ]
 })

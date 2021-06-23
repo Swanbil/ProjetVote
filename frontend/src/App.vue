@@ -2,12 +2,14 @@
   <div id="app">
     <body>
       <div id="page-container">
-        <NavBar :isLog="isLog" @clicked="onChangeLog"></NavBar>
+        <NavBar :isLog="isLog" @clicked="onChangeLog" :isAdmin="isAdmin" ></NavBar>
         <div id="content-wrap">
           <router-view
             class="container"
             :isLog="isLog"
+            :isAdmin="isAdmin"
             @clicked="onChangeLog"
+            @changeAdmin="onChangeAdmin"
           ></router-view>
         </div>
         <Footer id="footer"></Footer>
@@ -30,6 +32,7 @@ export default {
   data() {
     return {
       isLog: false,
+      isAdmin:false
     };
   },
   methods: {
@@ -37,6 +40,11 @@ export default {
     onChangeLog(value) {
       this.isLog = value;
       console.log("user est connecté depuis le parent = ", this.isLog);
+    },
+    onChangeAdmin(value) {
+      this.isAdmin = value;
+      console.log("user est un admin = ", this.isAdmin);
+      
     },
   },
   //check while refreshing that the user is always connected

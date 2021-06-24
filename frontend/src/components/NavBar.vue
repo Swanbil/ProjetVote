@@ -38,14 +38,17 @@ export default {
   },
   data(){
     return{
-      stateIsLog:false
+      stateIsLog:false,
+      stateIsAdmin:false
     };
   },
   methods:{
     logOut(){
       this.stateIsLog = false
+      this.stateIsAdmin = false
       Cookies.remove('connect.sid')
       this.$emit('clicked', this.stateIsLog)
+      this.$emit('changeAdmin', this.stateIsAdmin)
       this.$router.push({name:'Home'})
     }
   }

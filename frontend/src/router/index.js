@@ -5,6 +5,9 @@ import Vote from '@/components/Vote'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import Admin from '@/components/Admin'
+import AddElection from '@/components/AddElection'
+import ModifyElection from '@/components/ModifyElection'
+
 
 Vue.use(Router)
 
@@ -29,6 +32,16 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/addElection',
+      name: 'AddElection',
+      component: AddElection
+    },
+    {
+      path: '/modElection',
+      name: 'ModifyElection',
+      component: ModifyElection
     },
     {
       path: '/admin',

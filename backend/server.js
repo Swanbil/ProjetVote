@@ -9,7 +9,7 @@ const { Client } = require ('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'sacha',
+  password: 'vote',
   database: 'e-vote'
 })
 client.connect()
@@ -92,3 +92,16 @@ app.post('/api/modElec', async(req, res) => {
   });
   res.json(aff.rows)
 })
+
+//supprimer une election
+app.post('/api/supElec', async(req, res) => {
+  const idelection= req.body.idelection
+  console.log(idelection)
+
+  const aff=await client.query({
+      text: 'DELETE FROM election WHERE idelection =$1',
+      values: [idelection]
+  });
+  res.json(aff.rows)
+})
+

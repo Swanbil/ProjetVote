@@ -11,8 +11,7 @@
 
   <div id="Election">
     <button @click="ajouterElection()">Ajouter une nouvelle élection</button>
-    <button @click="SupprimerElection()">Supprimer une elections</button>
-    <button @click="modifierElection()">Modifier une election </button>
+.    <button @click="modifierElection()">Modifier/supprimer une election </button>
   </div>
   <div id="Vote">
     <button @click="ajoutercandidat()">Ajouter un nouveau candidat</button>
@@ -74,6 +73,8 @@
         {{election.datefin}}
         {{election.description}}
         <button @click="modifieElec(election.idelection)">Modifier cette election</button>
+        <button @click="spElec(election.idelection)">Supprimer cette election</button>
+
         <div id=elmod>
           <form @submit.prevent="mdElec()" method="POST">
 
@@ -86,6 +87,7 @@
             <input type="text" v-model="descri" placeholder="Entrez une descrption" required/>
 
             <button type="submit">Valider</button>
+
           </form>
         </div>
       </div>
@@ -190,6 +192,17 @@ export default {
       });
       console.log(modElec.data)
       this.elections = modElec.data
+    },
+
+    //supprimer election
+    async spElec(idelection){
+      this.currentElection=idelection
+      console.log (this.categorie)
+      const supElec= await axios.post('/api/supElec', {
+        idelection : this.currentElection,
+      });
+      console.log(supElec.data)
+      this.elections = supElec.data
     }
   }
 }

@@ -4,7 +4,8 @@
         <b-row no-gutters>
           <b-col md="4">
             <b-card-img
-              src="https://generationecologie.fr/wp-content/uploads/2021/06/Affiche-regionale-ile-de-France-e1623080546871-721x1024.png"
+              v-if="image"
+              :src="image"
               alt="Image"
               class="rounded-0"
               
@@ -12,14 +13,9 @@
           </b-col>
           <b-col class="cardText" md="8">
             
-            <b-card-body title="Titre/Candidat">
+            <b-card-body :title="candidat">
               <b-card-text>
-                This card allows to describe the program of a candidat for an election.
-                Nom
-                Prenom
-                email
-                Partie politique
-                Description programme
+                {{description}}
               </b-card-text>
             </b-card-body>
           </b-col>
@@ -32,6 +28,11 @@
 <script>
 export default {
   name: 'New',
+  props:{
+    candidat : String,
+    description : String,
+    image : String
+  },
   data(){
     return{
       title:'New'

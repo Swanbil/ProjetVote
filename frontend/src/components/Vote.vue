@@ -4,8 +4,8 @@
     <p v-if="isLog && !isAdmin">Here, you can vote</p>
     <p v-else>Connect to your vote account if you want to vote</p>
 
-    <div v-if="isLog && !isAdmin" class="elections">
-      <div v-for="election in elections" :key="election.idelection" class="liste-election">
+    <div v-show="showElection" v-if="isLog && !isAdmin" class="elections">
+      <div  v-for="election in elections" :key="election.idelection" class="liste-election">
         <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"
          checked>
         <label :for="election.id">
@@ -16,39 +16,36 @@
         </label>
       </div>
       <button @click="getCandidats()">Valider</button>
+    </div>
 
-      <div class="candidats">
+      <div v-show="!showElection" class="candidats">
         <div v-for="candidat in candidats" :key="candidat.nomc">
           <input type="radio" v-model="currentCandidat" :id="candidat.nomc" :value="candidat.nomc"
           checked>
-          <label :for="candidat.nomc">
-            {{candidat.nomc}}
-            {{candidat.prenomc}}
-            {{candidat.partipolitique}}
-            {{candidat.descriptifprojet}}
-          </label>
+          <New :candidat="candidat.nomc+' '+candidat.prenomc" :description="candidat.descriptifprojet+' '+candidat.partipolitique"></New>
         </div>
         <button @click="vote()">Valider</button>
       </div>
+
     </div>
-
-    
-
-    
-  </div>
 </template>
 
 <script>
 import axios from 'axios';
+import New from "./News.vue";
 export default {
   name: 'Vote',
+  components:{
+    New
+  },
   data(){
     return{
       title:'Vote',
       elections:[],
       currentElection:'',
       currentCandidat:'',
-      candidats:[]
+      candidats:[],
+      showElection:true
     }
     
   },
@@ -60,6 +57,7 @@ export default {
     async getCandidats(){
       const response = await axios.post('/api/candidats', {idElection:this.currentElection})
       this.candidats = response.data.candidats
+      this.showElection = false
     },
     async vote(){
       const choice = this.currentCandidat

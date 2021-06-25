@@ -1,5 +1,6 @@
 <template>
-  <div class="vote">
+<div class="pageAdmin">
+  <div class="accueilAdmin">
     <h1>{{ title }}</h1>
     <p>Here, you can see the results or manage users</p>
       <div class="menu px-3 py-2">
@@ -22,10 +23,12 @@
       </div>
     
   </div>
+</div>
 
 </template>
 
 <script>
+
 export default {
   name: "Admin",
   data() {

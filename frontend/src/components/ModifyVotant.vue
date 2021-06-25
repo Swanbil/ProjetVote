@@ -29,14 +29,30 @@
         </label>
 
       </div>
-      <div id=elmod>
-          <p id=datD>Selectionnez la date de début</p>
-          <input type="date" v-model="el.date" placeholder="Date de début" required />
-          <p id=datF>Selectionnez la date de fin</p>
-          <input type="date" v-model="el.dateF" placeholder="Date de fin" required/>
-          <input type="text" v-model="el.descri" placeholder="Entrez une descrption" required/>
-          <button type="submit" @click="modElec()">Modifier cette election</button>
-          <button @click="deleteElec()">Supprimer cette election</button>
+      <div classe ="affichageVotant">
+      </div>
+      <div  v-for="votant in votants" v-bind:key="votant.idutilisateur">
+        <input type="radio" v-model="currentvotant" :id="votant.id" :value="votant.idutilisateur"
+         checked>
+        <label :for="votant.id">
+          {{votant.idutilisateur}}
+          {{votant.nomv}}
+          {{votant.prenomv}}
+          {{votant.emailv}}
+          {{votant.numelec}}
+          {{votant.password}}
+          {{votant.dejavote}}
+        </label>
+
+      </div>
+      <div id=vomod>
+            <input type="text" v-model="votant.nomv" placeholder="Entrez le nom du votant" required/>
+            <input type="text" v-model="votant.prenomv" placeholder="Entrez le prenom du votant" required/>
+            <input type="email" v-model="votant.emailv" placeholder="Entrez l'email du votant" required/>
+            <input type="text" v-model="votant.numelec" placeholder="Entrez le numero electeur du votant" required/>
+            <input type="text" v-model="votant.password" placeholder="Entrez le mdp du votant" required/>
+            <button type="submit" @click="modVotant()">Modifier ce votant</button>
+            <button @click="deleteElec()">Supprimer cette election</button>
         </div>
   </div> 
   <div class="response">
@@ -60,6 +76,17 @@ export default {
         categorie: '',
         descri: ''
       },
+      vo:{
+        idutilisateur:'',
+        nomv:'',
+        prenomv: '',
+        emailv: '',
+        numelec: '',
+        password : '',
+        dejavote : ''
+      },
+      votants : [],
+      currentvotant : '',
       elections : [],
       currentElection : '',
       response:''
@@ -73,26 +100,32 @@ export default {
       });
       this.elections = affElec.data
     },
-        
-   //modif election
-    async modElec(){
-      this.el.idelection = this.currentElection
-      const modElec= await axios.post('/api/modElec', {
-        election:this.el
+
+  async displayVotant() {
+      this.response=''
+      const affVotant= await axios.post ('/api/affVotant',{
+      categorie: this.el.categorie,
       });
-      this.response = modElec.data.mess
+      this.votants = affVotant.data
+    }, 
+   //modif votant
+    async modVotant(){
+      this.vo.idutilisateur = this.currentvotant
+      const modVotant= await axios.post('/api/modVotant', {
+        votant:this.vo
+      });
+      this.response = modVotant.data.mess
     },
-    //supprimer election
-    async deleteElec(){
-      console.log(this.currentElection)
-      const supElec= await axios.post('/api/supElec', {
-        idelection : this.currentElection,
+    //supprimer Votants
+    async deleteVotant(){
+      console.log(this.currentvotant)
+      const supVotant= await axios.post('/api/supVotant', {
+        idutilisateur : this.currentvotant,
       });
-      this.response = supElec.data.mess
+      this.response = supVotant.data.mess
     }
   }
-
-};
+  };
 </script>
 
 <style scoped>

@@ -203,6 +203,25 @@ app.post('/api/supElec', async(req, res) => {
   res.json({mess:"Election supprimée"})
 })
 
+app.get('/api/elections', async(req,res) => {
+  const result = await client.query({
+    text:'SELECT * FROM election, categorieelection WHERE election.idcat = categorieelection.idcat'
+  });
+  const elections = result.rows
+  res.json({elections : elections})
+})
+
+app.post('/api/candidats', async(req,res) => {
+  const idelection = req.body.idElection
+  const result = await client.query({
+    text:'Select Distinct c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
+    values:[idelection]
+  });
+  const candidats = result.rows
+  res.json({candidats:candidats})
+
+})
+
 //define the port
 app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);

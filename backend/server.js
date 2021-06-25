@@ -15,8 +15,8 @@ const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'vote',
-  database: 'evote'
+  password: 'sacha',
+  database: 'e-vote'
 })
 client.connect()
 
@@ -139,6 +139,8 @@ app.post("/api/login", async (req, res) => {
   }
 })
 
+//------------------ ELECTIONS PART ----------------------------
+
 //Ajout d'élections
 app.post('/api/addElection', async(req, res) => {
   const categorie = req.body.election.categorie
@@ -207,3 +209,79 @@ app.post('/api/supElec', async(req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on the port::${port}`);
 });
+
+//---------------- VOTANTS PART ---------------------------------
+
+//Ajout de votant
+app.post('/api/addVotant', async(req, res) => {
+  const nomv = req.body.votant.nomv
+  const prenomv = req.body.votant.prenomv
+  const emailv = req.body.votant.emailv
+  const numelec = req.body.votant.numelec
+  const password = req.body.votant.password
+
+
+  // si un champ n'est pas rempli 
+  if (nomv === '' || prenomv === '' || emailv === '' || numelec=== '' || password=== '') {
+    res.status(400).json({ message: 'Veuillez remplir tous les champs' })
+    return
+  }
+  const sql = "SELECT COUNT(*) FROM votant WHERE numelec=$1"
+  const result = await client.query({
+    text: sql,
+    values: [numelec]
+  })
+  if (result.rows[0].count >= 1) {
+    res.json({mess:"Votant deja existant !"});
+    return
+  }
+  else{
+    const passwordHash = await bcrypt.hash(password, 10)
+    await client.query({
+      text: 'INSERT INTO votant (nomv, prenomv, emailv, numelec,password, dejavote) values ($1,$2,$3,$4,$5,False)',
+      values:[nomv, prenomv, emailv, numelec, passwordHash]
+    })
+    res.json({mess:"Votant ajoutée !"});
+  }
+
+  }),
+
+
+//Affichage des votants pour les modifier
+app.post('/api/affVotant', async(req, res) => {
+  const categorie = req.body.categorie
+  const result = await client.query({
+    text: 'SELECT idcat FROM categorieelection WHERE electype =$1',
+    values: [categorie]
+  });
+  const aff=await client.query({
+      text: 'SELECT *  FROM election WHERE idcat=$1',
+      values: [result.rows[0].idcat]
+  });
+  res.json(aff.rows)
+  //si il n'ya pas d'election erreur
+}),
+
+//Modifier votant
+app.post('/api/modVotant', async(req, res) => {
+  const date = req.body.election.date
+  const dateF = req.body.election.dateF
+  const description = req.body.election.descri
+  const idelection= req.body.election.idelection
+
+  const aff=await client.query({
+      text: 'UPDATE election SET datedebut=$1, datefin=$2, description=$3 WHERE idelection =$4',
+      values: [date,dateF,description,idelection]
+  });
+  res.json({mess:"Modifification effectuée"})
+}),
+
+//supprimer un votant
+app.post('/api/supVotant', async(req, res) => {
+  const idelection= req.body.idelection
+  const aff=await client.query({
+      text: 'DELETE FROM election WHERE idelection =$1',
+      values: [idelection]
+  });
+  res.json({mess:"Election supprimée"})
+})

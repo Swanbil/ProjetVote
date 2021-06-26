@@ -25,7 +25,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 8 * 60 * 60 * 1000, httpOnly: false } //8hours
+  cookie: { secure: false, maxAge: 8 * 60 * 60 * 10000, httpOnly: false } //8hours
 }))
 app.use(express.static(path.join(__dirname, '../my-app/build')));
 
@@ -91,9 +91,11 @@ app.post("/api/login", async (req, res) => {
     if (await bcrypt.compare(user.password, passwordHash)) {
       if (req.session.userId) {
         res.status(401).json({ message: 'Utilisateur deja authentifié' })
+        return
       }
       else {
         req.session.userId = result.rows[0].idutilisateur
+        console.log("session id = ",req.session.userId)
         res.json({
           message: 'Bienvenue ',
           isAdmin: false
@@ -117,6 +119,7 @@ app.post("/api/login", async (req, res) => {
     if (await bcrypt.compare(user.password, passwordHash)) {
       if (req.session.userId) {
         res.status(401).json({ message: 'Utilisateur deja authentifié' })
+        return
       }
       else {
         req.session.userId = result.rows[0].idutilisateur
@@ -196,6 +199,10 @@ app.post('/api/modElec', async(req, res) => {
 //supprimer une election
 app.post('/api/supElec', async(req, res) => {
   const idelection= req.body.idelection
+  const result=await client.query({
+    text: 'DELETE FROM participe WHERE idelection =$1',
+    values: [idelection]
+});
   const aff=await client.query({
       text: 'DELETE FROM election WHERE idelection =$1',
       values: [idelection]
@@ -214,12 +221,35 @@ app.get('/api/elections', async(req,res) => {
 app.post('/api/candidats', async(req,res) => {
   const idelection = req.body.idElection
   const result = await client.query({
-    text:'Select Distinct c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
+    text:'Select Distinct c.idcandidat, c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
     values:[idelection]
   });
   const candidats = result.rows
   res.json({candidats:candidats})
 
+})
+
+app.post('/api/vote', async(req,res) => {
+  const idElection = req.body.idElection
+  const idCandidat = req.body.idCandidat
+  const idVotant = req.session.userId
+  const date = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
+  const result = await client.query({
+    text:'Select COUNT(*) from vote WHERE idutilisateur=$1 AND idelection=$2',
+    values:[idVotant,idElection]
+  })
+  if (result.rows[0].count >= 1) {
+    res.status(400).json({ message: 'Vous avez déjà voté pour cette election' })
+    return
+  }
+  else{
+    const result = await client.query({
+      text:'INSERT INTO vote (idutilisateur,idcandidat,datevote,idelection) VALUES ($1,$2,$3,$4)',
+      values:[idVotant,idCandidat,date,idElection]
+    })
+    res.json({message:'A voté !'})
+  }
+  
 })
 
 //define the port

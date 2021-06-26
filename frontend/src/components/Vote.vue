@@ -15,16 +15,17 @@
           {{election.description}}
         </label>
       </div>
-      <button @click="getCandidats()">Valider</button>
+      <button class="btn" @click="getCandidats()">Valider</button>
     </div>
 
       <div v-show="!showElection" class="candidats">
         <div v-for="candidat in candidats" :key="candidat.nomc">
           <input type="radio" v-model="currentCandidat" :id="candidat.nomc" :value="candidat.nomc"
           checked>
-          <New :candidat="candidat.nomc+' '+candidat.prenomc" :description="candidat.descriptifprojet+' '+candidat.partipolitique"></New>
+          <New class="news" :candidat="candidat.nomc+' '+candidat.prenomc" :description="candidat.descriptifprojet" 
+          :partiPol="candidat.partipolitique" width="50%"></New>
         </div>
-        <button @click="vote()">Valider</button>
+        <button class="btn" @click="vote()">Voter</button>
       </div>
 
     </div>
@@ -82,5 +83,23 @@ h1{
 }
 .vote{
   text-align: center;
+}
+.candidats{
+  
+  flex-direction: column;
+  
+}
+.news{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn{
+  justify-content: center;
+  width:20%;
+  margin-top:2%;
+  background-color: cornflowerblue;
+  color:cornsilk;
+  font-weight: bold;
 }
 </style>

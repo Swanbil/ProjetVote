@@ -6,9 +6,9 @@
     <p>Here, you can see all the news</p>
 
     <div class="news">
-      <New></New>
-      <New></New>
-      <New></New>
+      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
     </div>
   </div>
 </template>
@@ -24,6 +24,9 @@ export default {
     return {
       title: "Home",
       msg: "",
+      cand:'Julien Bayou',
+      desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.',
+      im:'https://generationecologie.fr/wp-content/uploads/2021/06/Affiche-regionale-ile-de-France-e1623080546871-721x1024.png'
     };
   },
   methods: {},

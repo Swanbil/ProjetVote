@@ -1,18 +1,16 @@
 <template>
   <div class="news">
-      <b-card no-body class="im overflow-hidden" style="max-width: 100%">
+      <b-card no-body class="im overflow-hidden" :style="{width:width}" :header="partiPol"
+      header-tag="header" >
         <b-row no-gutters>
-          <b-col md="4">
+          <b-col v-if="image" md="4">
             <b-card-img
-              v-if="image"
               :src="image"
               alt="Image"
               class="rounded-0"
-              
             ></b-card-img>
           </b-col>
-          <b-col class="cardText" md="8">
-            
+          <b-col  class="cardText" >
             <b-card-body :title="candidat">
               <b-card-text>
                 {{description}}
@@ -31,11 +29,14 @@ export default {
   props:{
     candidat : String,
     description : String,
-    image : String
+    partiPol : String,
+    image : String,
+    width: String
   },
   data(){
     return{
-      title:'New'
+      title:'New',
+      wdth:'width:'
     }
     
   },
@@ -52,9 +53,11 @@ h1{
   
   
 }
+.im{
+  width:50%;
+}
 .news{
     text-align: center;
-    
 }
 .cardText{
     background-color: rgb(253, 252, 252);

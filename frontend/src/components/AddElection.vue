@@ -18,9 +18,9 @@
           <input type="date" v-model="election.date" placeholder="Date de début" required />
 
           <p id=datF>Selectionnez la date de fin</p>
-          <input type="date" v-model="election.dateF" placeholder="Date de fin" required/>
+          <input type="date" v-model="election.dateF" placeholder="Date de fin" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
 
-          <input type="text" v-model="election.descri" placeholder="Entrez une descrption" required/>
+          <input type="text" v-model="election.descri" placeholder="Entrez une descrption" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
 
           <button type="submit">Valider</button>
       </form>

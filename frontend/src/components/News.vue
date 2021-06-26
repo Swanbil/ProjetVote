@@ -10,13 +10,19 @@
               class="rounded-0"
             ></b-card-img>
           </b-col>
-          <b-col  class="cardText" >
-            <b-card-body :title="candidat">
+          <b-col class="cardText" >
+            <b-card-body v-if="dateDeb && dateFin" :title="candidat" :sub-title="'Du '+dateDeb+' au '+dateFin">
+              <b-card-text>
+                {{description}}
+              </b-card-text>
+            </b-card-body>
+            <b-card-body v-else :title="candidat">
               <b-card-text>
                 {{description}}
               </b-card-text>
             </b-card-body>
           </b-col>
+          
         </b-row>
       </b-card>
 
@@ -30,6 +36,8 @@ export default {
     candidat : String,
     description : String,
     partiPol : String,
+    dateDeb : String,
+    dateFin : String,
     image : String,
     width: String
   },

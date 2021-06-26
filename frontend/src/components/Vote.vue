@@ -8,12 +8,9 @@
       <div  v-for="election in elections" :key="election.idelection" class="liste-election">
         <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"
          checked>
-        <label :for="election.id">
-          {{election.electype}}
-          {{election.datedebut}}
-          {{election.datefin}}
-          {{election.description}}
-        </label>
+         <New class="news" :candidat="election.electype" :description="election.description"
+          :dateDeb="election.datedebut" :dateFin="election.datefin"
+          :partiPol="election.electype" width="50%"></New>
       </div>
       <button class="btn" @click="getCandidats()">Valider</button>
     </div>
@@ -22,7 +19,7 @@
         <div v-for="candidat in candidats" :key="candidat.nomc">
           <input type="radio" v-model="currentCandidat" :id="candidat.nomc" :value="candidat.nomc"
           checked>
-          <New class="news" :candidat="candidat.nomc+' '+candidat.prenomc" :description="candidat.descriptifprojet" 
+          <New class="news" :candidat="candidat.nomc+' '+candidat.prenomc" :description="candidat.descriptifprojet"
           :partiPol="candidat.partipolitique" width="50%"></New>
         </div>
         <button class="btn" @click="vote()">Voter</button>

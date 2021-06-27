@@ -147,6 +147,7 @@ app.post('/api/addElection', async(req, res) => {
   const date = req.body.election.date
   const dateF = req.body.election.dateF
   const description = req.body.election.descri
+  console.log(categorie)
 
   // si un champ n'est pas rempli 
   if (categorie === '' || date === '' || dateF === '' || description=== '') {
@@ -158,6 +159,7 @@ app.post('/api/addElection', async(req, res) => {
     text: 'SELECT idcat FROM categorieelection WHERE electype =$1',
     values: [categorie]
   })
+  console.log(result.rows[0])
 
   await client.query({
     text: 'INSERT INTO election(datedebut, datefin, description, idcat) values ($1,$2,$3,$4)',
@@ -289,7 +291,69 @@ app.post('/api/supVotant', async(req, res) => {
       text: 'DELETE FROM votant WHERE idutilisateur =$1',
       values: [id]
   });
-  res.json({mess:"Election supprimée"})
+  res.json({mess:"Votant supprimée"})
 })
 
-// ------------NEWS -------------------------
+// ------------NEWS PARTS -------------------------
+//Ajout de news
+app.post('/api/addNews', async(req, res) => {
+  const titre = req.body.informationpolitiques.titreinf
+  const description = req.body.informationpolitiques.descriptionsinf
+  const image = req.body.informationpolitiques.image
+
+  // si un champ n'est pas rempli 
+  if (titre === '' || description === '' || image === '' ) {
+    res.status(400).json({ message: 'Veuillez remplir tous les champs' })
+    return
+  }
+  else{
+    await client.query({
+      text: 'INSERT INTO informationpolitiques (titreinf, descriptionsinf, image) values ($1,$2,$3)',
+      values:[titre, description, image]
+    })
+    res.json({mess:"news ajoutée !"});
+  }
+
+  }),
+
+
+//Affichage des news pour les modifier
+app.post('/api/affNews', async(req, res) => {
+  const aff=await client.query({
+      text: 'SELECT *  FROM informationpolitiques',
+  });
+  res.json(aff.rows)
+  //si il n'ya pas d'election erreur
+}),
+
+//Modifier news
+app.post('/api/modNews', async(req, res) => {
+  const id = req.body.newi.idinfopol
+  const titre = req.body.newi.titreinfo
+  const descri = req.body.newi.descriptionsinfo
+  const image= req.body.newi.imageo
+  console.log(id)
+
+  if (titre === '' || descri === '' || image === '') {
+    res.json({message:"remplir tous les champs"})    
+    return
+  }
+  const aff=await client.query({
+      text: 'UPDATE informationpolitiques SET titreinf=$1, descriptionsinf=$2, image=$3WHERE idinfopol =$4',
+      values: [titre,descri,image,id]
+  });
+  res.json({mess:"Modifification effectuée"})
+}),
+
+//supprimer un votant
+app.post('/api/supNews', async(req, res) => {
+  const id= req.body.idinfopol
+  const aff=await client.query({
+      text: 'DELETE FROM informationpolitiques WHERE idinfopol =$1',
+      values: [id]
+  });
+  res.json({mess:"News supprimée"})
+})
+
+//--------------STATS PART----------------------
+

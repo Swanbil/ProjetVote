@@ -11,7 +11,7 @@
             <option value="" disabled selected class="elec">Catégorie</option>
             <option value="presidentielle">Présidentielle</option>
             <option value="municipale">Municipale</option>
-            <option value="regionale">Régionale</option>
+            <option value="regionnale">Régionale</option>
           </select>
 
           <p id=datD>Selectionnez la date de début</p>

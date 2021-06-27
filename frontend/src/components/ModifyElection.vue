@@ -11,7 +11,7 @@
           <option value="" disabled selected class="modifelec">Catégorie</option>
           <option value="presidentielle">Présidentielle</option>
           <option value="municipale">Municipale</option>
-          <option value="regionale">Régionale</option>
+          <option value="regionnale">Régionale</option>
         </select>
         <button>Valider</button>       
     </form>
@@ -37,8 +37,9 @@
           <input type="date" v-model="el.dateF" placeholder="Date de fin" required>
           <input type="text" v-model="el.descri" placeholder="Entrez une descrption" required>
           <button type="submit" @click="modElec()">Modifier cette election</button>
-          <button @click="deleteElec()">Supprimer cette election</button>
+          
         </form>
+        <button @click="deleteElec()">Supprimer cette election</button>
       </div>
   </div> 
   <div class="response">

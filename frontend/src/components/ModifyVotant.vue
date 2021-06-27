@@ -23,9 +23,9 @@
             <input type="email" v-model="vo.emailvo" placeholder="Entrez l'email du votant" required>
             <input type="text" v-model="vo.numeleco" placeholder="Entrez le numero electeur du votant" required>
             <input type="text" v-model="vo.passwordo" placeholder="Entrez le mdp du votant" required>
-            <button @click="modVotant()">Modifier ce votant</button>
-            <button @click="deleteVotant()">Supprimer cette election</button>
+            <button type="submit" @click="modVotant()">Modifier ce votant</button>
         </form>
+      <button @click="deleteVotant()">Supprimer cette election</button>
       </div>
     </div> 
     <div class="response">

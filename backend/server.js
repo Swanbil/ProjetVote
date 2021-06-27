@@ -150,7 +150,7 @@ app.post('/api/addElection', async(req, res) => {
 
   // si un champ n'est pas rempli 
   if (categorie === '' || date === '' || dateF === '' || description=== '') {
-    res.status(400).json({ message: 'Veuillez remplir tous les champs' })
+    res.status(400).json('Veuillez remplir tous les champs' )
     return
   }
 
@@ -187,7 +187,10 @@ app.post('/api/modElec', async(req, res) => {
   const dateF = req.body.election.dateF
   const description = req.body.election.descri
   const idelection= req.body.election.idelection
-
+  if (date === '' || dateF === '' || description === '') {
+    res.json({mess:"remplir tous les champs"})    
+    return
+  }
   const aff=await client.query({
       text: 'UPDATE election SET datedebut=$1, datefin=$2, description=$3 WHERE idelection =$4',
       values: [date,dateF,description,idelection]
@@ -258,24 +261,35 @@ app.post('/api/affVotant', async(req, res) => {
 
 //Modifier votant
 app.post('/api/modVotant', async(req, res) => {
-  const date = req.body.election.date
-  const dateF = req.body.election.dateF
-  const description = req.body.election.descri
-  const idelection= req.body.election.idelection
+  const id = req.body.votant.idutilisateur
+  const nom = req.body.votant.nomvo
+  const prenom = req.body.votant.prenomvo
+  const email= req.body.votant.emailvo
+  const numelec= req.body.votant.numeleco
+  const password= req.body.votant.passwordo
+  console.log(id)
 
+  if (nom === '' || prenom === '' || email === '' || numelec=== '' || password=== '') {
+    res.json({message:"remplir tous les champs"})    
+    return
+  }
+  
+  const passwordHash = await bcrypt.hash(password, 10)
   const aff=await client.query({
-      text: 'UPDATE election SET datedebut=$1, datefin=$2, description=$3 WHERE idelection =$4',
-      values: [date,dateF,description,idelection]
+      text: 'UPDATE votant SET nomv=$1, prenomv=$2, emailv=$3, numelec=$4, password=$5 WHERE idutilisateur =$6',
+      values: [nom,prenom,email,numelec,passwordHash, id]
   });
   res.json({mess:"Modifification effectuée"})
 }),
 
 //supprimer un votant
 app.post('/api/supVotant', async(req, res) => {
-  const idelection= req.body.idelection
+  const id= req.body.idutilisateur
   const aff=await client.query({
-      text: 'DELETE FROM election WHERE idelection =$1',
-      values: [idelection]
+      text: 'DELETE FROM votant WHERE idutilisateur =$1',
+      values: [id]
   });
   res.json({mess:"Election supprimée"})
 })
+
+// ------------NEWS -------------------------

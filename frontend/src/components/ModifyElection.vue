@@ -30,14 +30,16 @@
 
       </div>
       <div id=elmod>
+        <form @submit.prevent="modElec()" method="POST">
           <p id=datD>Selectionnez la date de début</p>
-          <input type="date" v-model="el.date" placeholder="Date de début" required />
+          <input type="date" v-model="el.date" placeholder="Date de début" required >
           <p id=datF>Selectionnez la date de fin</p>
-          <input type="date" v-model="el.dateF" placeholder="Date de fin" required/>
-          <input type="text" v-model="el.descri" placeholder="Entrez une descrption" required/>
+          <input type="date" v-model="el.dateF" placeholder="Date de fin" required>
+          <input type="text" v-model="el.descri" placeholder="Entrez une descrption" required>
           <button type="submit" @click="modElec()">Modifier cette election</button>
           <button @click="deleteElec()">Supprimer cette election</button>
-        </div>
+        </form>
+      </div>
   </div> 
   <div class="response">
       {{ response }}

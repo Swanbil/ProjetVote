@@ -17,13 +17,15 @@
 
       </div>
       <div id=vomod>
-            <input type="text" v-model="votant.nomv" placeholder="Entrez le nom du votant" required/>
-            <input type="text" v-model="votant.prenomv" placeholder="Entrez le prenom du votant" required/>
-            <input type="email" v-model="votant.emailv" placeholder="Entrez l'email du votant" required/>
-            <input type="text" v-model="votant.numelec" placeholder="Entrez le numero electeur du votant" required/>
-            <input type="text" v-model="votant.password" placeholder="Entrez le mdp du votant" required/>
-            <button type="submit" @click="modVotant()">Modifier ce votant</button>
-            <button @click="deleteElec()">Supprimer cette election</button>
+        <form @submit.prevent="modVotant()" method="POST">
+            <input type="text" v-model="vo.nomvo" placeholder="Entrez le nom du votant" required>
+            <input type="text" v-model="vo.prenomvo" placeholder="Entrez le prenom du votant" required>
+            <input type="email" v-model="vo.emailvo" placeholder="Entrez l'email du votant" required>
+            <input type="text" v-model="vo.numeleco" placeholder="Entrez le numero electeur du votant" required>
+            <input type="text" v-model="vo.passwordo" placeholder="Entrez le mdp du votant" required>
+            <button @click="modVotant()">Modifier ce votant</button>
+            <button @click="deleteVotant()">Supprimer cette election</button>
+        </form>
       </div>
     </div> 
     <div class="response">
@@ -42,11 +44,11 @@ export default {
       title: "Modifier un votant",
       vo:{
         idutilisateur:'',
-        nomv:'',
-        prenomv: '',
-        emailv: '',
-        numelec: '',
-        password : '',
+        nomvo:'',
+        prenomvo: '',
+        emailvo: '',
+        numeleco: '',
+        passwordo : '',
         dejavote : ''
       },
       votants : [],
@@ -63,7 +65,7 @@ export default {
       }, 
     //modif votant
       async modVotant(){
-        this.vo.idutilisateur = this.currentvotant
+        this.vo.idutilisateur = this.currentVotant
         const modVotant= await axios.post('/api/modVotant', {
           votant:this.vo
         });
@@ -73,7 +75,7 @@ export default {
       async deleteVotant(){
         console.log(this.currentvotant)
         const supVotant= await axios.post('/api/supVotant', {
-          idutilisateur : this.currentvotant,
+          idutilisateur : this.currentVotant,
         });
         this.response = supVotant.data.mess
       }

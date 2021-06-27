@@ -249,14 +249,8 @@ app.post('/api/addVotant', async(req, res) => {
 
 //Affichage des votants pour les modifier
 app.post('/api/affVotant', async(req, res) => {
-  const categorie = req.body.categorie
-  const result = await client.query({
-    text: 'SELECT idcat FROM categorieelection WHERE electype =$1',
-    values: [categorie]
-  });
   const aff=await client.query({
-      text: 'SELECT *  FROM election WHERE idcat=$1',
-      values: [result.rows[0].idcat]
+      text: 'SELECT *  FROM votant',
   });
   res.json(aff.rows)
   //si il n'ya pas d'election erreur

@@ -1,39 +1,10 @@
 <template>
-  <div class="election">
+  <div class="Votant">
     <h1>{{ title }}</h1>
-    <div id="modifElections">
-    <form @submit.prevent="displayElec()" method="POST">
-
-        <label for="statut-select" class="modifelec">
-            Choisissez votre catégorie d'elections à modifier :
-        </label>
-        <select id="statut-select" v-model="el.categorie" class="modifelec">
-          <option value="" disabled selected class="modifelec">Catégorie</option>
-          <option value="presidentielle">Présidentielle</option>
-          <option value="municipale">Municipale</option>
-          <option value="regionale">Régionale</option>
-        </select>
-        <button>Valider</button>       
-    </form>
-
-    <div classe ="affichageElec">
-      </div>
-      <div  v-for="election in elections" v-bind:key="election.idelection">
-        <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"
-         checked>
-        <label :for="election.id">
-          {{election.idelection}}
-          {{election.datedebut}}
-          {{election.datefin}}
-          {{election.description}}
-        </label>
-
-      </div>
-      <div classe ="affichageVotant">
-      </div>
-      <div  v-for="votant in votants" v-bind:key="votant.idutilisateur">
-        <input type="radio" v-model="currentvotant" :id="votant.id" :value="votant.idutilisateur"
-         checked>
+    <div class ="affichageVotant">
+        <button type="submit" @click="displayVotant()">aficher  votant</button>      
+        <div  v-for="votant in votants" v-bind:key="votant.idutilisateur">
+        <input type="radio" v-model="currentVotant" :id="votant.id" :value="votant.idutilisateur" checked>
         <label :for="votant.id">
           {{votant.idutilisateur}}
           {{votant.nomv}}
@@ -53,11 +24,11 @@
             <input type="text" v-model="votant.password" placeholder="Entrez le mdp du votant" required/>
             <button type="submit" @click="modVotant()">Modifier ce votant</button>
             <button @click="deleteElec()">Supprimer cette election</button>
-        </div>
-  </div> 
-  <div class="response">
-      {{ response }}
-  </div> 
+      </div>
+    </div> 
+    <div class="response">
+        {{ response }}
+    </div> 
     
   </div>
 </template>
@@ -65,17 +36,10 @@
 <script>
 import axios from "axios";
 export default {
-  name: "ModifyElection",
+  name: "ModifyVotant",
   data() {
     return {
-      title: "Modifier une election",
-      el:{
-        idelection:'',
-        date:'',
-        dateF: '',
-        categorie: '',
-        descri: ''
-      },
+      title: "Modifier un votant",
       vo:{
         idutilisateur:'',
         nomv:'',
@@ -86,45 +50,34 @@ export default {
         dejavote : ''
       },
       votants : [],
-      currentvotant : '',
-      elections : [],
-      currentElection : '',
+      currentVotant : '',
       response:''
     };
   },
   methods:{
-    async displayElec() {
-      this.response=''
-      const affElec= await axios.post ('/api/affElec',{
-      categorie: this.el.categorie,
-      });
-      this.elections = affElec.data
-    },
-
-  async displayVotant() {
-      this.response=''
-      const affVotant= await axios.post ('/api/affVotant',{
-      categorie: this.el.categorie,
-      });
-      this.votants = affVotant.data
-    }, 
-   //modif votant
-    async modVotant(){
-      this.vo.idutilisateur = this.currentvotant
-      const modVotant= await axios.post('/api/modVotant', {
-        votant:this.vo
-      });
-      this.response = modVotant.data.mess
-    },
-    //supprimer Votants
-    async deleteVotant(){
-      console.log(this.currentvotant)
-      const supVotant= await axios.post('/api/supVotant', {
-        idutilisateur : this.currentvotant,
-      });
-      this.response = supVotant.data.mess
+    async displayVotant() {
+        this.response=''
+        const affVotant= await axios.post ('/api/affVotant',{
+        });
+        this.votants = affVotant.data
+      }, 
+    //modif votant
+      async modVotant(){
+        this.vo.idutilisateur = this.currentvotant
+        const modVotant= await axios.post('/api/modVotant', {
+          votant:this.vo
+        });
+        this.response = modVotant.data.mess
+      },
+      //supprimer Votants
+      async deleteVotant(){
+        console.log(this.currentvotant)
+        const supVotant= await axios.post('/api/supVotant', {
+          idutilisateur : this.currentvotant,
+        });
+        this.response = supVotant.data.mess
+      }
     }
-  }
   };
 </script>
 

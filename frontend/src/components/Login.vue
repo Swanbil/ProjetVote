@@ -64,6 +64,7 @@ export default {
         console.log(response.data)
         this.stateIsAdmin = response.data.isAdmin
         this.stateIsLog = true
+        //localStorage.setItem('token',this.stateIsLog)
         this.$emit('clicked', this.stateIsLog)
         this.$emit('changeAdmin', this.stateIsAdmin)
         this.$router.push({name:'Home'})

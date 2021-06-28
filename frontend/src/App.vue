@@ -22,7 +22,6 @@
 import NavBar from "./components/NavBar.vue";
 import Footer from "./components/Footer.vue";
 import Cookies from 'js-cookie';
-
 export default {
   name: "App",
   components: {
@@ -65,16 +64,13 @@ export default {
   position: relative;
   min-height: 50vh;
 }
-
 #page-container {
   position: relative;
   min-height: 100vh;
 }
-
 #content-wrap {
   padding-bottom: 2.5rem; /* Footer height */
 }
-
 #footer {
   position: absolute;
   bottom: 0;

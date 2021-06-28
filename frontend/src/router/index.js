@@ -7,6 +7,12 @@ import Register from '@/components/Register'
 import Admin from '@/components/Admin'
 import AddElection from '@/components/AddElection'
 import ModifyElection from '@/components/ModifyElection'
+import AddVotant from '@/components/AddVotant'
+import ModifyVotant from '@/components/ModifyVotant'
+import AddNews from '@/components/AddNews'
+import ModifyNews from '@/components/ModifyNews'
+import AddCandidat from '@/components/AddCandidat'
+import ModifyCandidat from '@/components/ModifyCandidat'
 
 
 Vue.use(Router)
@@ -48,5 +54,36 @@ export default new Router({
       name: 'Admin',
       component: Admin
     },
+    {
+      path: '/addVotant',
+      name: 'AddVotant',
+      component: AddVotant
+    },
+    {
+      path: '/modVotant',
+      name: 'ModifyVotant',
+      component: ModifyVotant
+    },
+    {
+      path: '/modNews',
+      name: 'ModifyNews',
+      component: ModifyNews
+    },
+    {
+      path: '/addNews',
+      name: 'AddNews',
+      component: AddNews
+    },
+    {
+      path: '/modCandidat',
+      name: 'ModifyCandidat',
+      component: ModifyCandidat
+    },
+    {
+      path: '/addCandidat',
+      name: 'AddCandidat',
+      component: AddCandidat
+    },
+
   ]
 })

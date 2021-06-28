@@ -13,8 +13,20 @@
 
         <div class="block">
           <h3>Candidats</h3>
+          <li><router-link :to="{ name: 'AddCandidat' }">Ajouter un candidat</router-link></li>
+          <li><router-link :to="{ name: 'ModifyCandidat' }">Modifier/Supprimer un candidat</router-link></li>
+        </div>
+
+        <div class="block">
+          <h3>Votants</h3>
           <li><router-link :to="{ name: 'AddVotant' }">Ajouter un votant</router-link></li>
           <li><router-link :to="{ name: 'ModifyVotant' }">Modifier/Supprimer un votant</router-link></li>
+        </div>
+        
+        <div class="block">
+          <h3>News</h3>
+          <li><router-link :to="{ name: 'AddNews' }">Ajouter une news</router-link></li>
+          <li><router-link :to="{ name: 'ModifyNews' }">Modifier/Supprimer une news</router-link></li>
         </div>
 
         <div class="block">
@@ -22,11 +34,7 @@
           <li><router-link :to="{ name: 'AddStatistique' }">voir les statistique</router-link></li>
         </div>
 
-        <div class="block">
-          <h3>News</h3>
-          <li><router-link :to="{ name: 'AddNews' }">Ajouter une news</router-link></li>
-          <li><router-link :to="{ name: 'ModifyNews' }">Modifier/Supprimer une news</router-link></li>
-        </div>
+
         
       </div>
     

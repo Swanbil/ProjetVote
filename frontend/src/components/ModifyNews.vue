@@ -9,7 +9,8 @@
           {{newi.idinfopol}}
           {{newi.titreinf}}
           {{newi.descriptionsinf}}
-          {{newi.image}}
+          <img :src="newi.image"/>
+          
         </label>
       </div>
       <div id=nemod>

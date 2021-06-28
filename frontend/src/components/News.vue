@@ -1,28 +1,28 @@
 <template>
   <div class="news">
-      <b-card no-body class="im overflow-hidden" style="max-width: 100%">
+      <b-card no-body class="im overflow-hidden" :style="{width:width}" :header="partiPol"
+      header-tag="header" >
         <b-row no-gutters>
-          <b-col md="4">
+          <b-col v-if="image" md="4">
             <b-card-img
-              src="https://generationecologie.fr/wp-content/uploads/2021/06/Affiche-regionale-ile-de-France-e1623080546871-721x1024.png"
+              :src="image"
               alt="Image"
               class="rounded-0"
-              
             ></b-card-img>
           </b-col>
-          <b-col class="cardText" md="8">
-            
-            <b-card-body title="Titre/Candidat">
+          <b-col class="cardText" >
+            <b-card-body v-if="dateDeb && dateFin" :title="candidat" :sub-title="'Du '+dateDeb+' au '+dateFin">
               <b-card-text>
-                This card allows to describe the program of a candidat for an election.
-                Nom
-                Prenom
-                email
-                Partie politique
-                Description programme
+                {{description}}
+              </b-card-text>
+            </b-card-body>
+            <b-card-body v-else :title="candidat">
+              <b-card-text>
+                {{description}}
               </b-card-text>
             </b-card-body>
           </b-col>
+          
         </b-row>
       </b-card>
 
@@ -32,9 +32,19 @@
 <script>
 export default {
   name: 'New',
+  props:{
+    candidat : String,
+    description : String,
+    partiPol : String,
+    dateDeb : String,
+    dateFin : String,
+    image : String,
+    width: String
+  },
   data(){
     return{
-      title:'New'
+      title:'New',
+      wdth:'width:'
     }
     
   },
@@ -51,9 +61,11 @@ h1{
   
   
 }
+.im{
+  width:50%;
+}
 .news{
     text-align: center;
-    
 }
 .cardText{
     background-color: rgb(253, 252, 252);

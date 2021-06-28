@@ -16,7 +16,7 @@ const client = new Client({
   user: 'postgres',
   host: 'localhost',
   password: 'sacha',
-  database: 'e-vote'
+  database: 'evote'
 })
 client.connect()
 
@@ -25,7 +25,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 8 * 60 * 60 * 1000, httpOnly: false } //8hours
+  cookie: { secure: false, maxAge: 8 * 60 * 60 * 10000, httpOnly: false } //8hours
 }))
 app.use(express.static(path.join(__dirname, '../my-app/build')));
 
@@ -55,8 +55,8 @@ app.post('/api/register', async (req, res) => {
   }
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
-    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
-    //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
+    //const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
+    const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,
       values: [user.numElec, passwordHash, user.lastName, user.name, user.email]
@@ -81,6 +81,7 @@ app.post("/api/login", async (req, res) => {
     text: 'SELECT COUNT(*) from administrateur WHERE loginadmin=$1',
     values: [user.numElec]
   })
+  console.log(result2.rows)
   //cas user est un votant
   if (result.rows[0].count == 1) {
     const result = await client.query({
@@ -91,9 +92,11 @@ app.post("/api/login", async (req, res) => {
     if (await bcrypt.compare(user.password, passwordHash)) {
       if (req.session.userId) {
         res.status(401).json({ message: 'Utilisateur deja authentifié' })
+        return
       }
       else {
         req.session.userId = result.rows[0].idutilisateur
+        console.log("session id = ",req.session.userId)
         res.json({
           message: 'Bienvenue ',
           isAdmin: false
@@ -109,6 +112,7 @@ app.post("/api/login", async (req, res) => {
   }
   //cas user est un administrateur
   if (result2.rows[0].count == 1) {
+    console.log("ok")
     const result = await client.query({
       text: 'SELECT * from administrateur WHERE loginadmin=$1',
       values: [user.numElec]
@@ -117,6 +121,7 @@ app.post("/api/login", async (req, res) => {
     if (await bcrypt.compare(user.password, passwordHash)) {
       if (req.session.userId) {
         res.status(401).json({ message: 'Utilisateur deja authentifié' })
+        return
       }
       else {
         req.session.userId = result.rows[0].idutilisateur
@@ -202,12 +207,59 @@ app.post('/api/modElec', async(req, res) => {
 
 //supprimer une election
 app.post('/api/supElec', async(req, res) => {
+
   const idelection= req.body.idelection
+  const result=await client.query({
+    text: 'DELETE FROM participe WHERE idelection =$1',
+    values: [idelection]
+});
   const aff=await client.query({
       text: 'DELETE FROM election WHERE idelection =$1',
       values: [idelection]
   });
   res.json({mess:"Election supprimée"})
+})
+
+app.get('/api/elections', async(req,res) => {
+  const result = await client.query({
+    text:'SELECT * FROM election, categorieelection WHERE election.idcat = categorieelection.idcat'
+  });
+  const elections = result.rows
+  res.json({elections : elections})
+})
+
+app.post('/api/candidats', async(req,res) => {
+  const idelection = req.body.idElection
+  const result = await client.query({
+    text:'Select Distinct c.idcandidat, c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
+    values:[idelection]
+  });
+  const candidats = result.rows
+  res.json({candidats:candidats})
+
+})
+
+app.post('/api/vote', async(req,res) => {
+  const idElection = req.body.idElection
+  const idCandidat = req.body.idCandidat
+  const idVotant = req.session.userId
+  const date = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
+  const result = await client.query({
+    text:'Select COUNT(*) from vote WHERE idutilisateur=$1 AND idelection=$2',
+    values:[idVotant,idElection]
+  })
+  if (result.rows[0].count >= 1) {
+    res.status(400).json({ message: 'Vous avez déjà voté pour cette election' })
+    return
+  }
+  else{
+    const result = await client.query({
+      text:'INSERT INTO vote (idutilisateur,idcandidat,datevote,idelection) VALUES ($1,$2,$3,$4)',
+      values:[idVotant,idCandidat,date,idElection]
+    })
+    res.json({message:'A voté !'})
+  }
+  
 })
 
 //define the port
@@ -345,7 +397,7 @@ app.post('/api/modNews', async(req, res) => {
   res.json({mess:"Modifification effectuée"})
 }),
 
-//supprimer un votant
+//supprimer une news
 app.post('/api/supNews', async(req, res) => {
   const id= req.body.idinfopol
   const aff=await client.query({
@@ -353,6 +405,102 @@ app.post('/api/supNews', async(req, res) => {
       values: [id]
   });
   res.json({mess:"News supprimée"})
+})
+
+
+//---------------- CANDIDAT PART ---------------------------------
+
+//Ajout de candidat
+app.post('/api/addCandidat', async(req, res) => {
+  const idelec=req.body.election.idelection
+  const nomc = req.body.candidat.nomc
+  const prenomc = req.body.candidat.prenomc
+  const email = req.body.candidat.emailc
+  const parti = req.body.candidat.partipolitique
+  const descri = req.body.candidat.descriptifprojet
+
+  console.log(idelec)
+
+  // si un champ n'est pas rempli 
+  if (nomc === '' || prenomc === '' || email === '' || parti=== '' || descri=== '') {
+    res.status(400).json({ message: 'Veuillez remplir tous les champs' })
+    return
+  }
+  const sql = "SELECT COUNT(*) FROM candidat WHERE nomc=$1 AND prenomc=$2"
+  const result = await client.query({
+    text: sql,
+    values: [nomc, prenomc]
+  })
+  if (result.rows[0].count >= 1) {
+    res.json({mess:"Votant deja existant !"});
+    return
+  }
+  else{
+    await client.query({
+      text: 'INSERT INTO candidat (nomc, prenomc, emailc,partipolitique, descriptifprojet ) values ($1,$2,$3,$4,$5)',
+      values:[nomc, prenomc, email, parti, descri]
+    })
+    res.json({mess:"Votant ajoutée !"});
+
+    const sql = "SELECT idcandidat FROM candidat WHERE nomc=$1 AND prenomc=$2"
+    const result = await client.query({
+      text: sql,
+      values: [nomc, prenomc]
+    })
+
+    await client.query({
+      text: 'INSERT INTO participe (idelection, idcandidat) values ($1,$2)',
+      values:[idelec, result.rows[0].idcandidat]
+    })
+  }
+  }),
+
+
+//Affichage des candidats pour les modifier
+app.post('/api/affCandidat', async(req, res) => {
+  const aff=await client.query({
+      text: 'SELECT *  FROM candidat',
+  });
+  res.json(aff.rows)
+  //si il n'ya pas d'election erreur
+}),
+
+//Modifier un candidat
+app.post('/api/modCandidat', async(req, res) => {
+  const id = req.body.candidat.idcandidat
+  const nomc = req.body.candidat.nomc
+  const prenomc = req.body.candidat.prenomc
+  const email = req.body.candidat.emailc
+  const parti = req.body.candidat.partipolitique
+  const descri = req.body.candidat.descriptifprojet
+  console.log(id)
+
+  if (nomc === '' || prenomc === '' || email === ''|| parti=== '' || descri=== '') {
+    res.json({message:"remplir tous les champs"})    
+    return
+  }
+  else{
+    await client.query({
+      text: 'UPDATE candidat SET nomc=$1, prenomc=$2, emailc=$3, partipolitique=$4, descriptifprojet=$5 WHERE idcandidat =$6',
+      values: [nomc,prenomc,email,parti,descri,id]
+    });
+    res.json({mess:"Modifification effectuée"})
+  }
+  
+}),
+
+//supprimer un candidat
+app.post('/api/supCandidat', async(req, res) => {
+  const id= req.body.idcandidat
+  const enl=await client.query({
+    text: 'DELETE FROM participe WHERE idcandidat =$1',
+    values: [id]
+});
+  const aff=await client.query({
+      text: 'DELETE FROM candidat WHERE idcandidat =$1',
+      values: [id]
+  });
+  res.json({mess:"Votant supprimée"})
 })
 
 //--------------STATS PART----------------------

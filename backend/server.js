@@ -55,8 +55,8 @@ app.post('/api/register', async (req, res) => {
   }
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
-    //const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
-    const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
+    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
+    //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,
       values: [user.numElec, passwordHash, user.lastName, user.name, user.email]
@@ -501,7 +501,15 @@ app.post('/api/supCandidat', async(req, res) => {
       values: [id]
   });
   res.json({mess:"Votant supprimée"})
-})
+});
 
 //--------------STATS PART----------------------
+app.post('/api/showStats', async(req, res) => {
 
+  const enl=await client.query({
+    text: 'SELECT count( V.idcandidat), C.nomc from vote V , candidat C where idelection = 8 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
+  })
+  console.log(enl.rows)
+  res.json({stats: enl.rows})
+
+})

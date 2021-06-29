@@ -13,6 +13,7 @@ import AddNews from '@/components/AddNews'
 import ModifyNews from '@/components/ModifyNews'
 import AddCandidat from '@/components/AddCandidat'
 import ModifyCandidat from '@/components/ModifyCandidat'
+import ShowStatistique from '@/components/ShowStatistique'
 
 
 Vue.use(Router)
@@ -83,6 +84,11 @@ export default new Router({
       path: '/addCandidat',
       name: 'AddCandidat',
       component: AddCandidat
+    },
+    {
+      path: '/showStatistique',
+      name: 'ShowStatistique',
+      component: ShowStatistique
     },
 
   ]

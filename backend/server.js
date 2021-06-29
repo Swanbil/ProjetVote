@@ -55,8 +55,8 @@ app.post('/api/register', async (req, res) => {
   }
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
-    //const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
-    const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
+    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
+    //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,
       values: [user.numElec, passwordHash, user.lastName, user.name, user.email]
@@ -412,79 +412,104 @@ app.post('/api/supNews', async(req, res) => {
 
 //Ajout de candidat
 app.post('/api/addCandidat', async(req, res) => {
+  const idelec=req.body.election.idelection
   const nomc = req.body.candidat.nomc
   const prenomc = req.body.candidat.prenomc
   const email = req.body.candidat.emailc
   const parti = req.body.candidat.partipolitique
   const descri = req.body.candidat.descriptifprojet
 
+  console.log(idelec)
+
   // si un champ n'est pas rempli 
   if (nomc === '' || prenomc === '' || email === '' || parti=== '' || descri=== '') {
     res.status(400).json({ message: 'Veuillez remplir tous les champs' })
     return
   }
-  const sql = "SELECT COUNT(*) FROM candidat WHERE numelec=$1"
+  const sql = "SELECT COUNT(*) FROM candidat WHERE nomc=$1 AND prenomc=$2"
   const result = await client.query({
     text: sql,
-    values: [numelec]
+    values: [nomc, prenomc]
   })
   if (result.rows[0].count >= 1) {
     res.json({mess:"Votant deja existant !"});
     return
   }
   else{
-    const passwordHash = await bcrypt.hash(password, 10)
     await client.query({
-      text: 'INSERT INTO votant (nomv, prenomv, emailv, numelec,password, dejavote) values ($1,$2,$3,$4,$5,False)',
-      values:[nomv, prenomv, emailv, numelec, passwordHash]
+      text: 'INSERT INTO candidat (nomc, prenomc, emailc,partipolitique, descriptifprojet ) values ($1,$2,$3,$4,$5)',
+      values:[nomc, prenomc, email, parti, descri]
     })
     res.json({mess:"Votant ajoutée !"});
-  }
 
+    const sql = "SELECT idcandidat FROM candidat WHERE nomc=$1 AND prenomc=$2"
+    const result = await client.query({
+      text: sql,
+      values: [nomc, prenomc]
+    })
+
+    await client.query({
+      text: 'INSERT INTO participe (idelection, idcandidat) values ($1,$2)',
+      values:[idelec, result.rows[0].idcandidat]
+    })
+  }
   }),
 
 
-//Affichage des votants pour les modifier
-app.post('/api/affVotant', async(req, res) => {
+//Affichage des candidats pour les modifier
+app.post('/api/affCandidat', async(req, res) => {
   const aff=await client.query({
-      text: 'SELECT *  FROM votant',
+      text: 'SELECT *  FROM candidat',
   });
   res.json(aff.rows)
   //si il n'ya pas d'election erreur
 }),
 
-//Modifier votant
-app.post('/api/modVotant', async(req, res) => {
-  const id = req.body.votant.idutilisateur
-  const nom = req.body.votant.nomvo
-  const prenom = req.body.votant.prenomvo
-  const email= req.body.votant.emailvo
-  const numelec= req.body.votant.numeleco
-  const password= req.body.votant.passwordo
+//Modifier un candidat
+app.post('/api/modCandidat', async(req, res) => {
+  const id = req.body.candidat.idcandidat
+  const nomc = req.body.candidat.nomc
+  const prenomc = req.body.candidat.prenomc
+  const email = req.body.candidat.emailc
+  const parti = req.body.candidat.partipolitique
+  const descri = req.body.candidat.descriptifprojet
   console.log(id)
 
-  if (nom === '' || prenom === '' || email === '' || numelec=== '' || password=== '') {
+  if (nomc === '' || prenomc === '' || email === ''|| parti=== '' || descri=== '') {
     res.json({message:"remplir tous les champs"})    
     return
   }
+  else{
+    await client.query({
+      text: 'UPDATE candidat SET nomc=$1, prenomc=$2, emailc=$3, partipolitique=$4, descriptifprojet=$5 WHERE idcandidat =$6',
+      values: [nomc,prenomc,email,parti,descri,id]
+    });
+    res.json({mess:"Modifification effectuée"})
+  }
   
-  const passwordHash = await bcrypt.hash(password, 10)
-  const aff=await client.query({
-      text: 'UPDATE votant SET nomv=$1, prenomv=$2, emailv=$3, numelec=$4, password=$5 WHERE idutilisateur =$6',
-      values: [nom,prenom,email,numelec,passwordHash, id]
-  });
-  res.json({mess:"Modifification effectuée"})
 }),
 
-//supprimer un votant
-app.post('/api/supVotant', async(req, res) => {
-  const id= req.body.idutilisateur
+//supprimer un candidat
+app.post('/api/supCandidat', async(req, res) => {
+  const id= req.body.idcandidat
+  const enl=await client.query({
+    text: 'DELETE FROM participe WHERE idcandidat =$1',
+    values: [id]
+});
   const aff=await client.query({
-      text: 'DELETE FROM votant WHERE idutilisateur =$1',
+      text: 'DELETE FROM candidat WHERE idcandidat =$1',
       values: [id]
   });
   res.json({mess:"Votant supprimée"})
-})
+});
 
 //--------------STATS PART----------------------
+app.post('/api/showStats', async(req, res) => {
 
+  const enl=await client.query({
+    text: 'SELECT count( V.idcandidat), C.nomc from vote V , candidat C where idelection = 8 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
+  })
+  console.log(enl.rows)
+  res.json({stats: enl.rows})
+
+})

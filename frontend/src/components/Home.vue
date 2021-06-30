@@ -4,8 +4,11 @@
     
     <h1>{{ title }}</h1>
     <p>Here, you can see all the news</p>
-
+    
     <div class="news">
+      <div class="tabElec">
+        <Table></Table>
+      </div>
       <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
       <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
       <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
@@ -15,10 +18,12 @@
 
 <script>
 import New from "./News.vue";
+import Table from "./Table.vue";
 export default {
   name: "Home",
   components: {
     New,
+    Table
   },
   data() {
     return {
@@ -55,12 +60,16 @@ h1 {
   justify-content: space-between;
   flex-direction: column;
   margin:3%;
-
 }
+  .tabElec{
+    margin-left:3%;
+    margin-right:3%;
+  }
 @media (max-width: 1250px) {
     
   .news {
     align-items: center;
   }
+
 }
 </style>

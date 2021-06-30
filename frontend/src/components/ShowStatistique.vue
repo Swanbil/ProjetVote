@@ -22,7 +22,7 @@
             <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"
             checked>
             <label :for="election.id">
-                <p class=id>ci-joins l'id de l'election :
+                <p class=id>ci-joint l'id de l'election :
                 {{election.idelection}}
                 </p>
                 <p class=dateD>Date de début :

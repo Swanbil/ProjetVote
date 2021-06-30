@@ -3,17 +3,18 @@
     <h1>{{ title }}</h1>
     <div id="modifElections">
     <form @submit.prevent="displayElec()" method="POST">
-
+        <div id="choixCategorie">
         <label for="statut-select" class="modifelec">
-            Choisissez votre catégorie d'elections à modifier :
+            Choisisser la catégorie de l'élections à modifier :
         </label>
         <select id="statut-select" v-model="el.categorie" class="modifelec">
           <option value="" disabled selected class="modifelec">Catégorie</option>
           <option value="presidentielle">Présidentielle</option>
           <option value="municipale">Municipale</option>
-          <option value="regionnale">Régionale</option>
+          <option value="regionale">Régionale</option>
         </select>
-        <button>Valider</button>       
+        <button id="boutonValider">Valider</button>
+        </div>       
     </form>
 
     <div classe ="affichageElec">
@@ -31,15 +32,15 @@
       </div>
       <div id=elmod>
         <form @submit.prevent="modElec()" method="POST">
-          <p id=datD>Selectionnez la date de début</p>
+          <p id=datD>Sélectionner la date de début</p>
           <input type="date" v-model="el.date" placeholder="Date de début" required >
-          <p id=datF>Selectionnez la date de fin</p>
+          <p id=datF>Sélectionner la date de fin</p>
           <input type="date" v-model="el.dateF" placeholder="Date de fin" required>
           <input type="text" v-model="el.descri" placeholder="Entrez une descrption" required>
-          <button type="submit" @click="modElec()">Modifier cette election</button>
+          <button type="submit" @click="modElec()">Modifier cette élection</button>
           
         </form>
-        <button @click="deleteElec()">Supprimer cette election</button>
+        <button @click="deleteElec()">Supprimer cette élection</button>
       </div>
   </div> 
   <div class="response">
@@ -55,7 +56,7 @@ export default {
   name: "ModifyElection",
   data() {
     return {
-      title: "Modifier une election",
+      title: "Modifier une élection",
       el:{
         idelection:'',
         date:'',
@@ -115,5 +116,16 @@ h1 {
   text-align: center;
   background-color: #8ac57b;
   font-weight: bold;
+}
+
+#boutonValider{
+  margin-top: 2.5%;
+}
+
+#choixCategorie{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
 }
 </style>

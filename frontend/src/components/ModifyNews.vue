@@ -2,25 +2,26 @@
   <div class="News">
     <h1>{{ title }}</h1>
     <div class ="affichageNews">
-        <button type="submit" @click="displayNews()">aficher  news</button>      
-        <div  v-for="newi in news" v-bind:key="newi.idinfopol">
+        <button type="submit" @click="displayNews()" id="newsShow">Afficher news</button>      
+        <div  v-for="newi in news" v-bind:key="newi.idinfopol" id="newsDisplay">
         <input type="radio" v-model="currentNews" :id="newi.id" :value="newi.idinfopol" checked>
         <label :for="newi.id">
-          {{newi.idinfopol}}
-          {{newi.titreinf}}
-          {{newi.descriptionsinf}}
-          <img :src="newi.image"/>
+          Titre : {{newi.titreinf}}
+          Description : {{newi.descriptionsinf}}
+          <img :src="newi.image" width="400" height="200"/>
           
         </label>
       </div>
       <div id=nemod>
         <form @submit.prevent="modNews()" method="POST">
-            <input type="text" v-model="ne.titreinfo" placeholder="Entrez le nouveau titre" required>
-            <input type="text" v-model="ne.descriptionsinfo" placeholder="Entrez une nouvelle description" required>
-            <input type="url" v-model="ne.imageo" placeholder="mettez une nouvelle image en url" required>
-            <button type="submit" @click="modNews()">Modifier cette  News</button>            
+          <div id="formModifNews">
+            <input type="text" id="formInput" v-model="ne.titreinfo" placeholder="Entrer le nouveau titre" required>
+            <input type="text" id="formInput" v-model="ne.descriptionsinfo" placeholder="Entrer une nouvelle description" required>
+            <input type="url" id="formInput" v-model="ne.imageo" placeholder="Mettre une nouvelle URL" required>
+          </div>  
+            <button type="submit" id= "buttonMod" @click="modNews()">Modifier cette  News</button>              
         </form>
-        <button @click="deleteNews()">Supprimer cette News</button>
+        <button @click="deleteNews()" id="buttonSupp">Supprimer cette News</button>
       </div>
     </div> 
     <div class="response">
@@ -92,5 +93,82 @@ h1 {
   text-align: center;
   background-color: #8ac57b;
   font-weight: bold;
+}
+
+.affichageNews{
+  margin-top:3%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 3px solid #245fb8;
+  background-color: rgb(243, 243, 243);
+  padding-bottom: 2%;
+  padding-top: 2%;
+  width: 50%;
+  border-radius: 20px;
+  margin: auto;
+  padding: auto;
+}
+
+#formModifNews{
+  display: flex;
+  flex-direction: column;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  text-align: center;
+
+}
+
+#formInput{
+  border-radius:5px;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  width: 120%;
+}
+
+button{
+  margin: auto;
+  border-radius: 7px;
+  justify-content: center;
+  margin-top: 2%;
+  color: cornsilk;
+  font-weight: bold;
+  background-color: gray;
+}
+#buttonMod{
+  margin-bottom: 5%;
+  margin-top: 5%;
+  background-color: cornflowerblue;
+
+}
+
+#buttonSupp{
+  margin-bottom: 5%;
+  margin-top: 5%;
+  background-color: rgb(233, 32, 32);
+
+}
+
+#newsDisplay{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#newsShow {
+  margin-bottom: 5%;
+}
+
+img{
+  margin: 2%;
+  border: solid;
+}
+
+/**Gestion des "petits" écrans */
+@media (max-width: 1250px) {
+  .affichageNews{
+    width: 90%
+  } 
 }
 </style>

@@ -50,7 +50,7 @@ export default {
   name: "showElection",
   data() {
     return {
-      title: "observez les statistiques des élections",
+      title: "Consulter les statistiques des élections",
       el:{
         idelection:'',
         date:'',

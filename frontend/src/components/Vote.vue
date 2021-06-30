@@ -30,7 +30,7 @@
         <button class="btn" @click="getCandidats()">Valider</button>
       </div>
 
-      <div v-show="!showElection" class="candidats">
+      <div v-show="!showElection && candidats.length!=0" class="candidats">
         <div v-for="candidat in candidats" :key="candidat.idcandidat">
           <input
             type="radio"
@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <div class="response" :style="'background-color:'+color">
+    <div class="response" :style="'background-color:'+colorRep">
       {{ response }}
     </div>
   </div>
@@ -73,7 +73,7 @@ export default {
       currentCandidat: "",
       candidats: [],
       showElection: true,
-      response: "",
+      response: '',
       colorRep:''
     };
   },
@@ -83,27 +83,31 @@ export default {
   },
   methods: {
     async getCandidats() {
-      const response = await axios.post("/api/candidats", {
+      this.response = ''
+      try {
+        const response = await axios.post("/api/candidats", {
         idElection: this.currentElection,
       });
       this.candidats = response.data.candidats;
       this.showElection = false;
-    },
-    async vote() {
-      //console.log("choice = ",this.currentCandidat,"election =", this.currentElection)
-      try {
-        const response = await axios.post("/api/vote", {
-          idElection: this.currentElection,
-          idCandidat: this.currentCandidat,
-        });
-        this.response = response.data.message;
-        this.color='rgb(122, 180, 94)'
+      this.colorRep='rgb(122, 180, 94)'
       } catch (error) {
         this.response = error.response.data.message;
-        this.color='rgb(196, 105, 105)'
+        this.colorRep='rgb(196, 105, 105)'
       }
     },
+
+    async vote() {
+      this.response = ''
+      const response = await axios.post("/api/vote", {
+        idElection: this.currentElection,
+        idCandidat: this.currentCandidat,
+      });
+      this.response = response.data.message;
+      this.colorRep='rgb(122, 180, 94)'
+    },
   },
+
   async mounted() {
     const response = await axios.get("/api/elections");
     this.elections = response.data.elections;
@@ -140,6 +144,7 @@ h1 {
 }
 .response {
   margin-top:5%;
+  margin-bottom:5%;
   text-align: center;
   font-weight: bold;
 }

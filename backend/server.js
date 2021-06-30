@@ -229,21 +229,8 @@ app.get('/api/elections', async(req,res) => {
 })
 
 app.post('/api/candidats', async(req,res) => {
-  const idelection = req.body.idElection
-  const result = await client.query({
-    text:'Select Distinct c.idcandidat, c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
-    values:[idelection]
-  });
-  const candidats = result.rows
-  res.json({candidats:candidats})
-
-})
-
-app.post('/api/vote', async(req,res) => {
   const idElection = req.body.idElection
-  const idCandidat = req.body.idCandidat
   const idVotant = req.session.userId
-  const date = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
   const result = await client.query({
     text:'Select COUNT(*) from vote WHERE idutilisateur=$1 AND idelection=$2',
     values:[idVotant,idElection]
@@ -254,11 +241,27 @@ app.post('/api/vote', async(req,res) => {
   }
   else{
     const result = await client.query({
-      text:'INSERT INTO vote (idutilisateur,idcandidat,datevote,idelection) VALUES ($1,$2,$3,$4)',
-      values:[idVotant,idCandidat,date,idElection]
-    })
-    res.json({message:'A voté !'})
+      text:'Select Distinct c.idcandidat, c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
+      values:[idElection]
+    });
+    const candidats = result.rows
+    res.json({candidats:candidats})
   }
+  
+
+})
+
+app.post('/api/vote', async(req,res) => {
+  const idElection = req.body.idElection
+  const idCandidat = req.body.idCandidat
+  const idVotant = req.session.userId
+  const date = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
+  const result = await client.query({
+    text:'INSERT INTO vote (idutilisateur,idcandidat,datevote,idelection) VALUES ($1,$2,$3,$4)',
+    values:[idVotant,idCandidat,date,idElection]
+  })
+  res.json({message:'A voté !'})
+  
   
 })
 

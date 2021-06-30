@@ -3,9 +3,9 @@
     <h1>{{ title }}</h1>
     <div id="modifCandidat">
     <form @submit.prevent="displayCandidat()" method="POST">
-
+      <div id="selectCat">
         <label for="statut-select" class="modifelec">
-            Choisissez l'élection dont les candidat ont participé :
+            Choisisser l'élection à laquelle le candidat a participé :
         </label>
         <select id="statut-select" v-model="el.categorie" class="modifelec">
           <option value="" disabled selected class="modifelec">Catégorie</option>
@@ -13,7 +13,8 @@
           <option value="municipale">Municipale</option>
           <option value="regionale">Régionale</option>
         </select>
-        <button>Valider</button>       
+        <button id="boutonValid">Valider</button>
+        </div>       
     </form>
 
     <div classe ="affichageCanddiat">
@@ -33,16 +34,17 @@
       </div>
       <div id=camod>
         <form @submit.prevent="modCandidat()" method="POST">
-          <input type="text" v-model="ca.nomco" placeholder="Entrez un son nom" required>
-          <input type="text" v-model="ca.prenomco" placeholder="Entrez un son prenom" required>
-          <input type="text" v-model="ca.emailco" placeholder="Entrez un son mail" required>
-          <input type="text" v-model="ca.partipolitiqueco" placeholder="Entrez un son partie" required>
-          <input type="text" v-model="ca.descriptifprojetco" placeholder="Entrez un son projet" required>
-
-          <button type="submit" @click="modCandidat()">Modifier cet candidat</button>
+          <div id="modifFormCandidat">
+          <input type="text" v-model="ca.nomco" placeholder="Entrer son nom" required>
+          <input type="text" v-model="ca.prenomco" placeholder="Entrer son prenom" required>
+          <input type="text" v-model="ca.emailco" placeholder="Entrer son mail" required>
+          <input type="text" v-model="ca.partipolitiqueco" placeholder="Entrer son partie" required>
+          <input type="text" v-model="ca.descriptifprojetco" placeholder="Entrer son projet" required>
+          </div>
+          <button type="submit" id="boutonModif" @click="modCandidat()">Modifier ce candidat</button>
           
         </form>
-        <button @click="deleteCandidat()">Supprimer cet candidat</button>
+        <button @click="deleteCandidat()" id="boutonSup">Supprimer ce candidat</button>
       </div>
   </div> 
   <div class="response">
@@ -127,5 +129,74 @@ h1 {
   text-align: center;
   background-color: #8ac57b;
   font-weight: bold;
+}
+
+#modifCandidat{
+  margin-top:3%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 3px solid #245fb8;
+  background-color: rgb(243, 243, 243);
+  padding-top: 5%;
+  padding-bottom: 5%;
+  width: 40%;
+  border-radius: 20px;
+  margin: auto;
+  padding: auto;
+}
+
+#selectCat{
+  display: flex;
+  flex-direction: column;
+}
+
+button{
+  margin: auto;
+  padding: 2%;
+  border-radius: 7px;
+  justify-content: center;
+  margin-top: 2%;
+  color: cornsilk;
+  font-weight: bold;
+}
+
+#boutonValid{
+  background-color: rgb(15, 151, 26);
+  margin-bottom: 5%;
+  margin-top: 3%
+}
+
+#boutonModif{
+  background-color: cornflowerblue;
+  margin-bottom: 5%;
+
+}
+
+#boutonSup{
+  background-color: rgb(233, 32, 32);
+  margin-top: 5%;
+
+}
+
+#modifFormCandidat{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8%;
+}
+
+input{
+  margin-bottom: 5%;
+  margin-top: 5%;
+  border-radius: 5px;
+
+}
+
+/**Gestion des "petits" écrans */
+@media (max-width: 1250px) {
+  #modifCandidat{
+    width:75%
+  }  
 }
 </style>

@@ -2,32 +2,31 @@
   <div class="Votant">
     <h1>{{ title }}</h1>
     <div class ="affichageVotant">
-        <button type="submit" @click="displayVotant()">aficher  votant</button>      
+        <button type="submit" @click="displayVotant()">Afficher  votant</button>      
         <div  v-for="votant in votants" v-bind:key="votant.idutilisateur">
         <input type="radio" v-model="currentVotant" :id="votant.id" :value="votant.idutilisateur" checked>
         <label :for="votant.id">
-          {{votant.idutilisateur}}
-          {{votant.nomv}}
-          {{votant.prenomv}}
-          {{votant.emailv}}
-          {{votant.numelec}}
-          {{votant.password}}
-          {{votant.dejavote}}
+          Nom : {{votant.nomv}}
+          Prénom : {{votant.prenomv}}
+          e-mail : {{votant.emailv}}
+          N° électeur : {{votant.numelec}}
         </label>
-
       </div>
       <div id=vomod>
         <form @submit.prevent="modVotant()" method="POST">
-            <input type="text" v-model="vo.nomvo" placeholder="Entrez le nom du votant" required>
-            <input type="text" v-model="vo.prenomvo" placeholder="Entrez le prenom du votant" required>
-            <input type="email" v-model="vo.emailvo" placeholder="Entrez l'email du votant" required>
-            <input type="text" v-model="vo.numeleco" placeholder="Entrez le numero electeur du votant" required>
-            <input type="text" v-model="vo.passwordo" placeholder="Entrez le mdp du votant" required>
-            <button type="submit" @click="modVotant()">Modifier ce votant</button>
+          <div id="formModifVotant">
+            <input type="text" v-model="vo.nomvo" placeholder="Entrer le nom du votant" required>
+            <input type="text" v-model="vo.prenomvo" placeholder="Entrer le prenom du votant" required>
+            <input type="email" v-model="vo.emailvo" placeholder="Entrer l'email du votant" required>
+            <input type="text" v-model="vo.numeleco" placeholder="Entrer le numero electeur du votant" required>
+            <input type="text" v-model="vo.passwordo" placeholder="Entrer le mdp du votant" required>
+            </div>
+            <button type="submit" @click="modVotant()" id= "buttonMod">Modifier ce votant</button>
         </form>
-      <button @click="deleteVotant()">Supprimer cette election</button>
-      </div>
-    </div> 
+      <button @click="deleteVotant()" id="buttonSupp">Supprimer cette election</button>
+
+    </div>
+    </div>
     <div class="response">
         {{ response }}
     </div> 
@@ -101,4 +100,65 @@ h1 {
   background-color: #8ac57b;
   font-weight: bold;
 }
+
+.affichageVotant{
+  margin-top:3%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 3px solid #245fb8;
+  background-color: rgb(243, 243, 243);
+  padding-top: 5%;
+  padding-bottom: 5%;
+  border-radius: 20px;
+  margin: auto;
+  padding: auto;
+  width: 70%;
+}
+
+#formModifVotant{
+  display: flex;
+  flex-direction: column;
+  margin-top: 8%;
+  margin-bottom: 8%;
+}
+
+input{
+  margin-top: 5%;
+  margin-bottom: 5%;
+  border-radius: 5px;
+}
+
+button{
+  margin: auto;
+  border-radius: 7px;
+  justify-content: center;
+  margin-top: 2%;
+  color: cornsilk;
+  font-weight: bold;
+  background-color: gray;
+}
+
+#buttonMod{
+  margin-bottom: 5%;
+  margin-top: 5%;
+  background-color: cornflowerblue;
+
+}
+
+#buttonSupp{
+  margin-bottom: 5%;
+  margin-top: 5%;
+  background-color: rgb(233, 32, 32);
+
+}
+/**Gestion des "petits" écrans */
+@media (max-width: 1250px) {
+   .affichageVotant{
+     width: 90%;
+
+   }  
+}
+
 </style>

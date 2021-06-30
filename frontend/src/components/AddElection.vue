@@ -146,6 +146,7 @@ button{
   display: flex;
 }
 
+/**Gestion des "petits" écrans */
 @media (max-width: 1250px) {
     
   #ajoutElections {

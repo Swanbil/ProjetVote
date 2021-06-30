@@ -13,35 +13,37 @@
           <option value="municipale">Municipale</option>
           <option value="regionale">Régionale</option>
         </select>
-        <button id="boutonValider">Valider</button>
+        <button id="boutonValid">Valider</button>
         </div>       
     </form>
 
-    <div classe ="affichageElec">
-      </div>
-      <div  v-for="election in elections" v-bind:key="election.idelection">
+    <div class ="affichageElec">
+      <div  v-for="election in elections" v-bind:key="election.idelection" id="elecResult">
         <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"
          checked>
         <label :for="election.id">
-          {{election.idelection}}
-          {{election.datedebut}}
-          {{election.datefin}}
+          Date de début : {{election.datedebut}}
+          Date de fin : {{election.datefin}}
           {{election.description}}
         </label>
-
       </div>
       <div id=elmod>
         <form @submit.prevent="modElec()" method="POST">
-          <p id=datD>Sélectionner la date de début</p>
+          <div id="modifDates">
+          <p id=datD>Sélectionner la date de début :</p>
           <input type="date" v-model="el.date" placeholder="Date de début" required >
-          <p id=datF>Sélectionner la date de fin</p>
+          <p id=datF>Sélectionner la date de fin :</p>
           <input type="date" v-model="el.dateF" placeholder="Date de fin" required>
-          <input type="text" v-model="el.descri" placeholder="Entrez une descrption" required>
-          <button type="submit" @click="modElec()">Modifier cette élection</button>
-          
+          </div>
+          <div id="descripModif">
+            <input type="text" v-model="el.descri" placeholder="Entrez une description" required>
+            <button type="submit" id="boutonModif" @click="modElec()">Modifier cette élection</button>
+          </div>
         </form>
-        <button @click="deleteElec()">Supprimer cette élection</button>
+        <button @click="deleteElec()" id="boutonSup">Supprimer cette élection</button>
       </div>
+    </div>
+      
   </div> 
   <div class="response">
       {{ response }}
@@ -118,14 +120,97 @@ h1 {
   font-weight: bold;
 }
 
-#boutonValider{
-  margin-top: 2.5%;
-}
-
 #choixCategorie{
   display: flex;
   align-items: center;
   flex-direction: column;
+}
 
+#modifElections{
+  margin-top:3%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 3px solid #245fb8;
+  background-color: rgb(243, 243, 243);
+  padding-bottom: 2%;
+  padding-top: 2%;
+  width: 40%;
+  border-radius: 20px;
+  margin: auto;
+  padding: auto;
+}
+
+#modifDates{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 60%;
+  margin: auto;
+  padding: auto;
+  margin-bottom: 5%;
+  margin-top: 5%;
+
+}
+
+#elecResult{
+  display: flex;
+  width: 100%;
+  margin:auto;
+  padding: auto;
+}
+
+
+.affichageElec{
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+button{
+  margin: auto;
+  padding: 2%;
+  border-radius: 7px;
+  justify-content: center;
+  margin-top: 2%;
+  color: cornsilk;
+  font-weight: bold;
+}
+
+#descripModif{
+  display: flex;
+  flex-direction: column;
+}
+
+#boutonValid{
+  background-color: rgb(15, 151, 26);
+}
+
+#boutonModif{
+  background-color: cornflowerblue;
+
+}
+
+#boutonSup{
+  background-color: rgb(233, 32, 32);
+}
+
+input {
+  border-radius: 5px;
+  margin-left: 2.5%;
+}
+
+/**Gestion des "petits" écrans */
+@media (max-width: 1250px) {
+  #boutonSup{
+    background-color: rgb(233, 32, 32);
+    margin-top: 10%;
+}
+#boutonModif{
+    background-color: cornflowerblue;
+    margin-top: 10%;
+}    
+  
 }
 </style>

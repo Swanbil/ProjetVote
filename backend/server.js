@@ -55,8 +55,8 @@ app.post('/api/register', async (req, res) => {
   }
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
-    //const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
-    const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
+    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
+    //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,
       values: [user.numElec, passwordHash, user.lastName, user.name, user.email]
@@ -229,21 +229,8 @@ app.get('/api/elections', async(req,res) => {
 })
 
 app.post('/api/candidats', async(req,res) => {
-  const idelection = req.body.idElection
-  const result = await client.query({
-    text:'Select Distinct c.idcandidat, c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
-    values:[idelection]
-  });
-  const candidats = result.rows
-  res.json({candidats:candidats})
-
-})
-
-app.post('/api/vote', async(req,res) => {
   const idElection = req.body.idElection
-  const idCandidat = req.body.idCandidat
   const idVotant = req.session.userId
-  const date = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
   const result = await client.query({
     text:'Select COUNT(*) from vote WHERE idutilisateur=$1 AND idelection=$2',
     values:[idVotant,idElection]
@@ -254,11 +241,27 @@ app.post('/api/vote', async(req,res) => {
   }
   else{
     const result = await client.query({
-      text:'INSERT INTO vote (idutilisateur,idcandidat,datevote,idelection) VALUES ($1,$2,$3,$4)',
-      values:[idVotant,idCandidat,date,idElection]
-    })
-    res.json({message:'A voté !'})
+      text:'Select Distinct c.idcandidat, c.nomc, c.prenomc, c.partipolitique, c.descriptifprojet from candidat c, participe p, election e Where p.idelection = $1 and p.idcandidat = c.idcandidat',
+      values:[idElection]
+    });
+    const candidats = result.rows
+    res.json({candidats:candidats})
   }
+  
+
+})
+
+app.post('/api/vote', async(req,res) => {
+  const idElection = req.body.idElection
+  const idCandidat = req.body.idCandidat
+  const idVotant = req.session.userId
+  const date = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
+  const result = await client.query({
+    text:'INSERT INTO vote (idutilisateur,idcandidat,datevote,idelection) VALUES ($1,$2,$3,$4)',
+    values:[idVotant,idCandidat,date,idElection]
+  })
+  res.json({message:'A voté !'})
+  
   
 })
 
@@ -501,7 +504,15 @@ app.post('/api/supCandidat', async(req, res) => {
       values: [id]
   });
   res.json({mess:"Votant supprimée"})
-})
+});
 
 //--------------STATS PART----------------------
+app.post('/api/showStats', async(req, res) => {
+  const idElection = req.body.election
+  const enl=await client.query({
+    text: 'SELECT count( V.idcandidat), C.nomc from vote V , candidat C where idelection = $1 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
+    values:[idElection]
+  })
+  res.json({stats: enl.rows})
 
+})

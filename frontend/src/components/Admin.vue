@@ -31,7 +31,7 @@
 
         <div class="block">
           <h3>Statistiques</h3>
-          <li><router-link :to="{ name: 'AddStatistique' }">voir les statistique</router-link></li>
+          <li><router-link :to="{ name: 'ShowStatistique' }">voir les statistiques</router-link></li>
         </div>
 
 

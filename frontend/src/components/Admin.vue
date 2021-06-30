@@ -2,13 +2,12 @@
 <div class="pageAdmin">
   <div class="accueilAdmin">
     <h1>{{ title }}</h1>
-    <p>Here, you can see the results or manage users</p>
       <div class="menu px-3 py-2">
         
         <div class="block">
-          <h3>Elections</h3>
-          <li><router-link :to="{ name: 'AddElection' }">Ajouter une election</router-link></li>
-          <li><router-link :to="{ name: 'ModifyElection' }">Modifier/supprimer une election</router-link></li>
+          <h3>Élections</h3>
+          <li><router-link :to="{ name: 'AddElection' }">Ajouter une élection</router-link></li>
+          <li><router-link :to="{ name: 'ModifyElection' }">Modifier/supprimer une élection</router-link></li>
         </div>
 
         <div class="block">
@@ -31,7 +30,7 @@
 
         <div class="block">
           <h3>Statistiques</h3>
-          <li><router-link :to="{ name: 'ShowStatistique' }">voir les statistiques</router-link></li>
+          <li><router-link :to="{ name: 'ShowStatistique' }">Voir les résultats</router-link></li>
         </div>
 
 
@@ -72,6 +71,7 @@ h1 {
   display:flex;
   flex-direction: column;
   margin-bottom: 5%;
+  align-items: center;
   
 }
 .block{
@@ -80,13 +80,24 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  
-
-  
+  border: 3px solid #245fb8;
+  background-color: rgb(243, 243, 243);
+  padding-top: 5%;
+  padding-bottom: 5%;
+  width: 50%;
+  border-radius: 20px;
 }
+
+.block:hover{
+  background-color: rgba(189, 189, 189, 0.466);
+
+}
+
+
 li{
   list-style: none;
-  
+  font-size: 130%;
+  margin-top: 2%  
 }
 h3{
   margin-bottom:2%;

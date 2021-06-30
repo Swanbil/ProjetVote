@@ -39,9 +39,8 @@
 
       </div>
   </div> 
-  <div v-for="candidat in stat" :key="candidat.nomc" class="response">
-      {{ candidat.nomc }}:{{ candidat.count }}
-        
+  <div v-show="hasElec" v-for="candidat in stat" :key="candidat.nomc" class="response">
+      {{ candidat.nomc }}:{{ candidat.count }}  
   </div> 
     
 </div>
@@ -61,7 +60,7 @@ export default {
         categorie: '',
         descri: ''
       },
-
+      hasElec:false,
       elections : [],
       currentElection : '',
       response:'',
@@ -71,7 +70,7 @@ export default {
   methods:{
       //show elections
     async displayElec() {
-      this.response=''
+      this.hasElec = false
       const affElec= await axios.post ('/api/affElec',{
       categorie: this.el.categorie,
       });
@@ -80,11 +79,13 @@ export default {
         
    //show stats
     async ShowStatistiques(){
+    
       this.el.idelection = this.currentElection
       const ShowStatistique= await axios.post('/api/showStats', {
-        election:this.el
+        election:this.el.idelection
       });
       this.stat = ShowStatistique.data.stats
+      this.hasElec = true
       console.log(this.stat)
     },
   }

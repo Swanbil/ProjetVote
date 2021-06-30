@@ -505,11 +505,11 @@ app.post('/api/supCandidat', async(req, res) => {
 
 //--------------STATS PART----------------------
 app.post('/api/showStats', async(req, res) => {
-
+  const idElection = req.body.election
   const enl=await client.query({
-    text: 'SELECT count( V.idcandidat), C.nomc from vote V , candidat C where idelection = 8 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
+    text: 'SELECT count( V.idcandidat), C.nomc from vote V , candidat C where idelection = $1 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
+    values:[idElection]
   })
-  console.log(enl.rows)
   res.json({stats: enl.rows})
 
 })

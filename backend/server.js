@@ -15,7 +15,7 @@ const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'vote',
+  password: 'sacha',
   database: 'evote'
 })
 client.connect()
@@ -55,11 +55,11 @@ app.post('/api/register', async (req, res) => {
   }
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
-    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,$6)"
+    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,false)"
     //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,
-      values: [user.numElec, passwordHash, user.lastName, user.name, user.email]
+      values: [user.lastName, user.name, user.email,user.numElec, passwordHash]
     })
     res.json({ message: 'Bienvenue ' + user.name })
   }

@@ -26,7 +26,7 @@
           Nom : {{candidat.nomc}},
           Prenom : {{candidat.prenomc}},
           <!-- Email : {{candidat.emailc}}, -->
-          Parti politique{{candidat.partipolitique}},
+          Parti politique : {{candidat.partipolitique}},
           Descriptif du projet : {{candidat.descriptifprojet}}
 
         </label>

@@ -3,14 +3,14 @@
     
     
     <h1>{{ title }}</h1>
-    <p>Here, you can see all the news</p>
+    <p>Bienvenue sur E-vote, ici consultez les dernières news et les élections en cours </p>
     
     <div class="news">
       <div class="tabElec">
         <Table></Table>
       </div>
       <div class="liNews" v-for="newi in news" :key="newi.idinfopol">
-        <New :candidat="newi.titreinf" :description="newi.descriptionsinf" :image="newi.image" :partiPol="newi.titreinf" width="100%"></New>
+        <New :candidat="newi.titreinf" :description="newi.descriptionsinf" :image="newi.image" width="100%" height="600" :partiPol="newi.titreinf" ></New>
       </div>
 
       </div>

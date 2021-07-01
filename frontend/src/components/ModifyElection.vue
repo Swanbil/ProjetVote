@@ -22,8 +22,9 @@
         <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"
          checked>
         <label :for="election.id">
-          Date de début : {{election.datedebut}}
-          Date de fin : {{election.datefin}}
+
+          Date de début : {{election.datedebut}}<br/>
+          Date de fin : {{election.datefin}}<br/>
           {{election.description}}
         </label>
       </div>
@@ -159,6 +160,10 @@ h1 {
   width: 100%;
   margin:auto;
   padding: auto;
+  justify-content: center;
+  font-weight:600;
+  margin-bottom: 2%;
+  
 }
 
 
@@ -184,7 +189,8 @@ button{
 }
 
 #boutonValid{
-  background-color: rgb(15, 151, 26);
+  background-color: rgb(12, 197, 95);
+  margin-bottom: 2%;
 }
 
 #boutonModif{
@@ -193,7 +199,7 @@ button{
 }
 
 #boutonSup{
-  background-color: rgb(233, 32, 32);
+  background-color: rgb(230, 76, 76);
 }
 
 input {

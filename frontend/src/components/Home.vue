@@ -3,26 +3,25 @@
     
     
     <h1>{{ title }}</h1>
-    
+    <p>Bienvenue sur E-vote, ici consultez les dernières news et les élections en cours </p>
     
     <div class="news">
       <div class="tabElec">
-        <h2>Prochaines elections</h2>
         <Table></Table>
       </div>
-      <h2>Informations politiques</h2>
-      <div class="liNews">
-        <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
-        <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
-        <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+      <div class="liNews" v-for="newi in news" :key="newi.idinfopol">
+        <New :candidat="newi.titreinf" :description="newi.descriptionsinf" :image="newi.image" width="100%" height="600" :partiPol="newi.titreinf" ></New>
+      </div>
+
       </div>
     </div>
-  </div>
+  
 </template>
 
 <script>
 import New from "./News.vue";
 import Table from "./Table.vue";
+import axios from "axios";
 export default {
   name: "Home",
   components: {
@@ -32,13 +31,16 @@ export default {
   data() {
     return {
       title: "Home",
-      msg: "",
-      cand:'Julien Bayou',
-      desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.',
-      im:'https://generationecologie.fr/wp-content/uploads/2021/06/Affiche-regionale-ile-de-France-e1623080546871-721x1024.png'
+      news:[]
     };
   },
-  methods: {},
+  async mounted(){
+    this.response=''
+    const affNews= await axios.get('/api/infopol',{});
+    this.news = affNews.data
+    console.log("info",this.news)
+
+  }
 };
 </script>
 
@@ -53,12 +55,6 @@ h1 {
   margin-top: 50px;
   font-weight: bold;
   margin-bottom: 5%;
-}
-h2{
-  margin-top:50px;
-  margin-bottom:50px;
-  color:cornflowerblue
-
 }
 .btn {
   text-align: center;

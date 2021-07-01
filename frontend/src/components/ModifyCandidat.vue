@@ -19,15 +19,15 @@
 
     <div classe ="affichageCanddiat">
       </div>
-      <div  v-for="candidat in candidats" v-bind:key="candidat.idcandidat">
+      <div  v-for="candidat in candidats" v-bind:key="candidat.idcandidat" id="cand">
         <input type="radio" v-model="currentCandidat" :id="candidat.id" :value="candidat.idcandidat"
          checked>
         <label :for="candidat.id">
-          {{candidat.nomc}}
-          {{candidat.prenomc}}
-          {{candidat.emailc}}
-          {{candidat.partipolitique}}
-          {{candidat.descriptifprojet}}
+          Nom : {{candidat.nomc}},
+          Prenom : {{candidat.prenomc}},
+          <!-- Email : {{candidat.emailc}}, -->
+          Parti politique : {{candidat.partipolitique}},
+          Descriptif du projet : {{candidat.descriptifprojet}}
 
         </label>
 
@@ -141,7 +141,7 @@ h1 {
   background-color: rgb(243, 243, 243);
   padding-top: 5%;
   padding-bottom: 5%;
-  width: 40%;
+  width: 85%;
   border-radius: 20px;
   margin: auto;
   padding: auto;
@@ -163,7 +163,7 @@ button{
 }
 
 #boutonValid{
-  background-color: rgb(15, 151, 26);
+  background-color: rgb(12, 197, 95);;
   margin-bottom: 5%;
   margin-top: 3%
 }
@@ -175,7 +175,7 @@ button{
 }
 
 #boutonSup{
-  background-color: rgb(233, 32, 32);
+  background-color: rgb(230, 76, 76);
   margin-top: 5%;
 
 }
@@ -190,7 +190,9 @@ input{
   margin-bottom: 5%;
   margin-top: 5%;
   border-radius: 5px;
-
+}
+#cand{
+  font-weight: bold;
 }
 
 /**Gestion des "petits" écrans */

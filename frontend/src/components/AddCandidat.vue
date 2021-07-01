@@ -5,7 +5,7 @@
       <div id="modifElections">
     <form @submit.prevent="displayElec()" method="POST">
       <div id="test2">
-        <label for="statut-select" class="modifelec">
+        <label for="statut-select" class="modifelec" id ="texttitre">
             Choisir la catégorie d'élections à laquelle participe le candidat :
         </label>
         <select id="statut-select" v-model="el.categorie" class="modifelec">
@@ -19,9 +19,8 @@
     </form>
 
     <div class ="affichageElec">
-      <div  v-for="election in elections" v-bind:key="election.idelection">
-        <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"
-         checked>
+      <div  v-for="election in elections" v-bind:key="election.idelection" id ="elec">
+        <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection"  checked>
         <label :for="election.id">
           Date de début : {{election.datedebut}}
           Date de fin : {{election.datefin}}
@@ -187,10 +186,16 @@ button{
   background-color: rgb(243, 243, 243);
   padding-top: 5%;
   padding-bottom: 5%;
-  width: 40%;
+  width: 55%;
   border-radius: 20px;
   margin: auto;
-  padding: auto;
+  padding: 5%;
+}
+#texttitre{
+text-align: center;  
+}
+#elec{
+  font-weight : bold;
 }
 
 /**Gestion des "petits" écrans */

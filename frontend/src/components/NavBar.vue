@@ -12,7 +12,7 @@
         <b-nav-item v-if="isAdmin" class="px-2"><router-link to="/admin">Admin</router-link></b-nav-item>
       </b-navbar-nav>
 
-       <b-navbar-nav class="ms-auto">
+       <b-navbar-nav class="ml-auto">
           <b-button  v-if="!isLog" size="sm" class="btn my-2 my-sm-0 mx-2" type="submit" variant="light">
             <router-link to="/login" class="btn-log" >Connexion</router-link>
           </b-button>

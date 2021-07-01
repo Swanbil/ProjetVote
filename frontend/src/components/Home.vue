@@ -9,16 +9,19 @@
       <div class="tabElec">
         <Table></Table>
       </div>
-      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
-      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
-      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+      <div class="liNews" v-for="newi in news" :key="newi.idinfopol">
+        <New :candidat="newi.titreinf" :description="newi.descriptionsinf" :image="newi.image" :partiPol="newi.titreinf" width="100%"></New>
+      </div>
+
+      </div>
     </div>
-  </div>
+  
 </template>
 
 <script>
 import New from "./News.vue";
 import Table from "./Table.vue";
+import axios from "axios";
 export default {
   name: "Home",
   components: {
@@ -28,13 +31,16 @@ export default {
   data() {
     return {
       title: "Home",
-      msg: "",
-      cand:'Julien Bayou',
-      desc:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.',
-      im:'https://generationecologie.fr/wp-content/uploads/2021/06/Affiche-regionale-ile-de-France-e1623080546871-721x1024.png'
+      news:[]
     };
   },
-  methods: {},
+  async mounted(){
+    this.response=''
+    const affNews= await axios.get('/api/infopol',{});
+    this.news = affNews.data
+    console.log("info",this.news)
+
+  }
 };
 </script>
 

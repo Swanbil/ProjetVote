@@ -1,14 +1,15 @@
 <template>
   <div class="home">
-    
-    
+
     <h1>{{ title }}</h1>
     <p>Bienvenue sur E-vote, ici consultez les dernières news et les élections en cours </p>
     
     <div class="news">
       <div class="tabElec">
+        <h2>Prochaines elections</h2>
         <Table></Table>
       </div>
+      <h2>Informations politiques</h2>
       <div class="liNews" v-for="newi in news" :key="newi.idinfopol">
         <New :candidat="newi.titreinf" :description="newi.descriptionsinf" :image="newi.image" width="100%" height="600" :partiPol="newi.titreinf" ></New>
       </div>
@@ -47,7 +48,7 @@ export default {
 
 <style scoped>
 .home {
-  text-align: center;
+  text-align: center;;
 }
 
 h1 {
@@ -56,6 +57,14 @@ h1 {
   font-weight: bold;
   margin-bottom: 5%;
 }
+
+h2{
+  margin-top:2%;
+  margin-bottom:3%;
+  color:#4b6ea1; 
+}
+
+
 .btn {
   text-align: center;
   padding: 5px;
@@ -63,13 +72,14 @@ h1 {
 }
 .news {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: column;
   margin:3%;
 }
-  .tabElec{
-    margin-left:3%;
-    margin-right:3%;
+.tabElec{
+  margin-left:3%;
+  margin-right:3%;
+  margin-bottom:5%;
   }
 @media (max-width: 1250px) {
     

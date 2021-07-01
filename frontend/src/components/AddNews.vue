@@ -66,6 +66,7 @@ h1{
   text-align: center;
   background-color: #8ac57b;
   font-weight: bold;
+  margin-bottom:5%;
 }
 
 #ajoutNews{

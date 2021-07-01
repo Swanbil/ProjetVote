@@ -3,15 +3,19 @@
     
     
     <h1>{{ title }}</h1>
-    <p>Here, you can see all the news</p>
+    
     
     <div class="news">
       <div class="tabElec">
+        <h2>Prochaines elections</h2>
         <Table></Table>
       </div>
-      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
-      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
-      <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+      <h2>Informations politiques</h2>
+      <div class="liNews">
+        <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+        <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+        <New :candidat="cand" :description="desc" :image="im" width="100%"></New>
+      </div>
     </div>
   </div>
 </template>
@@ -49,6 +53,12 @@ h1 {
   margin-top: 50px;
   font-weight: bold;
   margin-bottom: 5%;
+}
+h2{
+  margin-top:50px;
+  margin-bottom:50px;
+  color:cornflowerblue
+
 }
 .btn {
   text-align: center;

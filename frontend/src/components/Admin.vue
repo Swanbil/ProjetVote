@@ -31,11 +31,9 @@
 
         <div class="block">
           <h3>Statistiques</h3>
-          <li><router-link :to="{ name: 'ShowStatistique' }">voir les statistiques</router-link></li>
+          <li><router-link :to="{ name: 'ShowStatistique' }">Voir les résultats des elections</router-link></li>
         </div>
 
-
-        
       </div>
     
   </div>

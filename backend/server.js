@@ -516,3 +516,12 @@ app.post('/api/showStats', async(req, res) => {
   res.json({stats: enl.rows})
 
 })
+
+//-----------Home PART----------------
+app.get('/api/infopol', async(req, res) => {
+  const news=await client.query({
+      text: 'SELECT *  FROM informationpolitiques',
+  });
+  res.json(news.rows)
+  //si il n'ya pas d'election erreur
+})

@@ -1,91 +1,106 @@
 <template>
-<div class="PageAdmin">
-  <div class="AccueilAdmin">
+<div class="pageAdmin">
+  <div class="accueilAdmin">
     <h1>{{ title }}</h1>
-    <p>Here, you can see the results or manage users</p>
-    <button type="button" @click="ShowElection()"> Gerer elections </button>
-    <button @click="ShowVote()">Gerer les votants</button>
-    <button @click="ShowNews()">Gerer les news </button>
-    <button @click="ShowStats()">Observer les statistiques des élections</button>
-  </div>
+      <div class="menu px-3 py-2">
+        
+        <div class="block">
+          <h3>Élections</h3>
+          <li><router-link :to="{ name: 'AddElection' }">Ajouter une élection</router-link></li>
+          <li><router-link :to="{ name: 'ModifyElection' }">Modifier/supprimer une élection</router-link></li>
+        </div>
 
-  <div id="Election">
-    <button @click="AJouterElection()">Ajouter une nouvelle élection</button>
-    <button @click="SupprimerElection()">Supprimer une elections</button>
-    <button @click="ModifierElection()">Modiier une election </button>
-  </div>
-  <div id="Vote">
-    <button @click="AJouterVotant()">Ajouter un nouveau votant</button>
-    <button @click="SupprimerVotant()">Supprimer un votant</button>
-    <button @click="ModifierVotant()">Modiier un votant </button>
-  </div>
-  <div id="News">
-    <button @click="AJouterNews()">Ajouter une actualité</button>
-    <button @click="SupprimerNews()">Supprimer une actualité </button>
-    <button @click="ModifierNews()">Modiier une actualité </button>
+        <div class="block">
+          <h3>Candidats</h3>
+          <li><router-link :to="{ name: 'AddCandidat' }">Ajouter un candidat</router-link></li>
+          <li><router-link :to="{ name: 'ModifyCandidat' }">Modifier/Supprimer un candidat</router-link></li>
+        </div>
+
+        <div class="block">
+          <h3>Votants</h3>
+          <li><router-link :to="{ name: 'AddVotant' }">Ajouter un votant</router-link></li>
+          <li><router-link :to="{ name: 'ModifyVotant' }">Modifier/Supprimer un votant</router-link></li>
+        </div>
+        
+        <div class="block">
+          <h3>News</h3>
+          <li><router-link :to="{ name: 'AddNews' }">Ajouter une news</router-link></li>
+          <li><router-link :to="{ name: 'ModifyNews' }">Modifier/Supprimer une news</router-link></li>
+        </div>
+
+        <div class="block">
+          <h3>Statistiques</h3>
+          <li><router-link :to="{ name: 'ShowStatistique' }">Voir les résultats</router-link></li>
+        </div>
+
+
+        
+      </div>
+    
   </div>
 </div>
+
 </template>
 
 <script>
+
 export default {
-  name: 'Admin',
-  data(){
-    return{
-      title:'Admin'
-    }
-    
+  name: "Admin",
+  data() {
+    return {
+      title: "Admin",
+    };
   },
   props: {
-    msg: String
+    msg: String,
   },
-
-
-  methods : {
-    ShowElection(){
-      document.getElementById ("Election").style.display="flex";
-      document.getElementById ("Vote").style.display="none";
-      document.getElementById ("News").style.display="none";
-
-
-    },
-    ShowVote(){
-      document.getElementById ("Vote").style.display="flex";
-      document.getElementById ("Election").style.display="none";
-      document.getElementById ("News").style.display="none";
-
-    },
-    ShowNews(){
-      document.getElementById ("Vote").style.display="none";
-      document.getElementById ("Election").style.display="none";
-      document.getElementById ("News").style.display="flex";
-
-
-    },
-}
-}
-
+};
 </script>
 
 <style scoped>
-h1{
-  text-align:center;
-  margin-top:50px;
+h1 {
+  text-align: center;
+  margin-top: 50px;
   font-weight: bold;
-  margin-bottom:5%;
-  
+  margin-bottom: 2%;
 }
-.admin{
+.admin {
   text-align: center;
 }
-#Election{
-  display : none;
+.menu{
+  display:flex;
+  flex-direction: column;
+  margin-bottom: 5%;
+  align-items: center;
+  
 }
-#Vote{
-  display : none;
-}
-#News{
-  display : none;
+.block{
+  margin-top:3%;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 3px solid #245fb8;
+  background-color: rgb(243, 243, 243);
+  padding-top: 5%;
+  padding-bottom: 5%;
+  width: 50%;
+  border-radius: 20px;
 }
 
+.block:hover{
+  background-color: rgba(189, 189, 189, 0.466);
+
+}
+
+
+li{
+  list-style: none;
+  font-size: 130%;
+  margin-top: 2%  
+}
+h3{
+  margin-bottom:2%;
+  
+}
 </style>

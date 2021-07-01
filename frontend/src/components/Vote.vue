@@ -1,36 +1,151 @@
 <template>
   <div class="vote">
     <h1>{{ title }}</h1>
-    <p>Here, you can vote</p>
-    
+    <p v-if="isLog && !isAdmin">Here, you can vote</p>
+    <p v-else>Connect to your vote account if you want to vote</p>
+    <div>
+      <div v-show="showElection" v-if="isLog && !isAdmin" class="elections">
+        <div
+          v-for="election in elections"
+          :key="election.idelection"
+          class="liste-election"
+        >
+          <input
+            type="radio"
+            v-model="currentElection"
+            :id="election.id"
+            :value="election.idelection"
+            checked
+          />
+          <New
+            class="news"
+            :candidat="election.electype"
+            :description="election.description"
+            :dateDeb="election.datedebut"
+            :dateFin="election.datefin"
+            :partiPol="election.electype"
+            width="50%"
+          ></New>
+        </div>
+        <button class="btn" @click="getCandidats()">Valider</button>
+      </div>
+
+      <div v-show="!showElection && candidats.length!=0" class="candidats">
+        <div v-for="candidat in candidats" :key="candidat.idcandidat">
+          <input
+            type="radio"
+            v-model="currentCandidat"
+            :id="candidat.nomc"
+            :value="candidat.idcandidat"
+            checked
+          />
+          <New
+            class="news"
+            :candidat="candidat.nomc + ' ' + candidat.prenomc"
+            :description="candidat.descriptifprojet"
+            :partiPol="candidat.partipolitique"
+            width="50%"
+          ></New>
+        </div>
+        <button class="btn" @click="vote()">Voter</button>
+      </div>
+    </div>
+
+    <div class="response" :style="'background-color:'+colorRep">
+      {{ response }}
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import New from "./News.vue";
 export default {
-  name: 'Vote',
-  data(){
-    return{
-      title:'Vote'
-    }
-    
+  name: "Vote",
+  components: {
+    New,
+  },
+  data() {
+    return {
+      title: "Vote",
+      elections: [],
+      currentElection: "",
+      currentCandidat: "",
+      candidats: [],
+      showElection: true,
+      response: '',
+      colorRep:''
+    };
   },
   props: {
-    msg: String
-  }
-}
+    isLog: Boolean,
+    isAdmin: Boolean,
+  },
+  methods: {
+    async getCandidats() {
+      this.response = ''
+      try {
+        const response = await axios.post("/api/candidats", {
+        idElection: this.currentElection,
+      });
+      this.candidats = response.data.candidats;
+      this.showElection = false;
+      this.colorRep='rgb(122, 180, 94)'
+      } catch (error) {
+        this.response = error.response.data.message;
+        this.colorRep='rgb(196, 105, 105)'
+      }
+    },
+
+    async vote() {
+      this.response = ''
+      const response = await axios.post("/api/vote", {
+        idElection: this.currentElection,
+        idCandidat: this.currentCandidat,
+      });
+      this.response = response.data.message;
+      this.colorRep='rgb(122, 180, 94)'
+    },
+  },
+
+  async mounted() {
+    const response = await axios.get("/api/elections");
+    this.elections = response.data.elections;
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
-h1{
-  text-align:center;
-  margin-top:50px;
-  font-weight: bold;
-  margin-bottom:5%;
-  
-}
-.vote{
+h1 {
   text-align: center;
+  margin-top: 50px;
+  font-weight: bold;
+  margin-bottom: 5%;
+}
+.vote {
+  text-align: center;
+}
+.candidats {
+  flex-direction: column;
+}
+.news {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn {
+  justify-content: center;
+  width: 20%;
+  margin-top: 2%;
+  background-color: cornflowerblue;
+  color: cornsilk;
+  font-weight: bold;
+}
+.response {
+  margin-top:5%;
+  margin-bottom:5%;
+  text-align: center;
+  font-weight: bold;
 }
 </style>

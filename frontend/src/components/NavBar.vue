@@ -1,7 +1,7 @@
 <template>
   <div>
   <b-navbar  toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand  class="mx-2 px-2 "><router-link :to="{ name: 'Home' }" class="logo">E-VOTE</router-link></b-navbar-brand>
+    <b-navbar-brand  class="mx-2 px-2 "><router-link :to="{ name: 'Home' }" class="logo" id="log">E-VOTE</router-link></b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -79,13 +79,19 @@ a {
   font-weight: bold;
   padding: 7px;
   float: right;
+  border-radius: 8px;
   
 }
 .btn:hover{
   background-color: #c9c4c4;
+  border-radius: 8px;
 }
 .btn-log {
   color: black;
+  border-radius: 8px;
+}
+#log{
+  border-radius: 10px;
 }
 
 </style>

@@ -3,7 +3,7 @@
     <h1>{{ title }}</h1>
     <div class ="affichageVotant">
         <button type="submit" @click="displayVotant()">Afficher  votant</button>      
-        <div  v-for="votant in votants" v-bind:key="votant.idutilisateur">
+        <div  v-for="votant in votants" v-bind:key="votant.idutilisateur" id="vot">
         <input type="radio" v-model="currentVotant" :id="votant.id" :value="votant.idutilisateur" checked>
         <label :for="votant.id">
           Nom : {{votant.nomv}}
@@ -150,8 +150,11 @@ button{
 #buttonSupp{
   margin-bottom: 5%;
   margin-top: 5%;
-  background-color: rgb(233, 32, 32);
+  background-color: rgb(230, 76, 76);
 
+}
+#vot{
+  font-weight: bold;
 }
 /**Gestion des "petits" écrans */
 @media (max-width: 1250px) {

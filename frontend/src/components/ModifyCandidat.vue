@@ -2,50 +2,60 @@
   <div class="candidat">
     <h1>{{ title }}</h1>
     <div id="modifCandidat">
-    <form @submit.prevent="displayCandidat()" method="POST">
-      <div id="selectCat">
-        <label for="statut-select" class="modifelec">
-            Choisisser l'élection à laquelle le candidat a participé :
-        </label>
-        <select id="statut-select" v-model="el.categorie" class="modifelec">
-          <option value="" disabled selected class="modifelec">Catégorie</option>
-          <option value="presidentielle">Présidentielle</option>
-          <option value="municipale">Municipale</option>
-          <option value="regionale">Régionale</option>
-        </select>
-        <button id="boutonValid">Valider</button>
+      <form @submit.prevent="displayElec()" method="POST">
+        <div id="selectCat">
+          <label for="statut-select" class="modifelec">
+              Choisisser la catégorie d'élection à laquelle le candidat a participé :
+          </label>
+          <select id="statut-select" v-model="el.categorie" class="modifelec">
+            <option value="" disabled selected class="modifelec">Catégorie</option>
+            <option value="presidentielle">Présidentielle</option>
+            <option value="municipale">Municipale</option>
+            <option value="regionale">Régionale</option>
+          </select>
+          <button id="boutonValid">Valider</button>
         </div>       
-    </form>
+      </form>
+    <div class ="affichageElec">
+    <div  v-for="election in elections" v-bind:key="election.idelection" id="elecResult">
+      <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection" checked>
+        <label :for="election.id">
+          Date de début : {{election.datedebut}}<br/>
+          Date de fin : {{election.datefin}}<br/>
+          {{election.description}}
+        </label>
+    </div>
 
     <div classe ="affichageCanddiat">
-      </div>
+      <button type="submit" id="buttonAffCand" @click="buttonAffCand()">Afficher les candidats</button>
       <div  v-for="candidat in candidats" v-bind:key="candidat.idcandidat" id="cand">
-        <input type="radio" v-model="currentCandidat" :id="candidat.id" :value="candidat.idcandidat"
-         checked>
+        
+        <input type="radio" v-model="currentCandidat" :id="candidat.id" :value="candidat.idcandidat" checked>
         <label :for="candidat.id">
           Nom : {{candidat.nomc}},
           Prenom : {{candidat.prenomc}},
           <!-- Email : {{candidat.emailc}}, -->
           Parti politique : {{candidat.partipolitique}},
           Descriptif du projet : {{candidat.descriptifprojet}}
-
         </label>
-
       </div>
+            
+    </div>
+      
       <div id=camod>
         <form @submit.prevent="modCandidat()" method="POST">
           <div id="modifFormCandidat">
-          <input type="text" v-model="ca.nomco" placeholder="Entrer son nom" required>
-          <input type="text" v-model="ca.prenomco" placeholder="Entrer son prenom" required>
-          <input type="text" v-model="ca.emailco" placeholder="Entrer son mail" required>
-          <input type="text" v-model="ca.partipolitiqueco" placeholder="Entrer son partie" required>
-          <input type="text" v-model="ca.descriptifprojetco" placeholder="Entrer son projet" required>
+          <input type="text" v-model="ca.nomc" placeholder="Entrer son nom" required>
+          <input type="text" v-model="ca.prenomc" placeholder="Entrer son prenom" required>
+          <input type="text" v-model="ca.emailc" placeholder="Entrer son mail" required>
+          <input type="text" v-model="ca.partipolitique" placeholder="Entrer son partie" required>
+          <input type="text" v-model="ca.descriptifprojet" placeholder="Entrer son projet" required>
           </div>
-          <button type="submit" id="boutonModif" @click="modCandidat()">Modifier ce candidat</button>
-          
+          <button type="submit" id="boutonModif" @click="modCandidat()">Modifier ce candidat</button>   
         </form>
         <button @click="deleteCandidat()" id="boutonSup">Supprimer ce candidat</button>
       </div>
+    </div>
   </div> 
   <div class="response">
       {{ response }}
@@ -57,7 +67,7 @@
 <script>
 import axios from "axios";
 export default {
-  name: "ModifyElection",
+  name: "ModifyCandidat",
   data() {
     return {
       title: "Modifier un candidat",
@@ -84,31 +94,44 @@ export default {
     };
   },
   methods:{
-    async displayCandidat() {
+    //aff elections
+      async displayElec() {
       this.response=''
-      const affCandidat= await axios.post ('/api/affCandidat',{
+      const affElec= await axios.post ('/api/affElec',{
+      categorie: this.el.categorie,
       });
-      this.candidats = affCandidat.data
+      this.elections = affElec.data
     },
         
-   //modif election
+   //modif candidat
     async modCandidat(){
       this.ca.idcandidat = this.currentCandidat
       const modCandidat= await axios.post('/api/modCandidat', {
-        candidat:this.ca
+        candidat:this.ca,
       });
       this.response = modCandidat.data.mess
     },
-    //supprimer election
+    //supprimer candidat
     async deleteCandidat(){
       console.log(this.currentCandidat)
       const supCandidat= await axios.post('/api/supCandidat', {
         idcandidat : this.currentCandidat,
+        idelection : this.currentElection,
       });
       this.response = supCandidat.data.mess
+    },
+    //affichage candidats 
+    async buttonAffCand(){
+      this.el.idelection = this.currentElection,
+      this.response=''
+      const affCand= await axios.post ('/api/affCandidat',{
+        categorie: this.el.categorie,
+        idelection : this.currentElection,
+      });
+      this.candidats = affCand.data
+    },
     }
-  }
-
+  
 };
 </script>
 
@@ -197,6 +220,10 @@ input{
 }
 #cand{
   font-weight: bold;
+}
+#buttonAffCand{
+  background-color: rgb(148, 137, 137);
+  margin-top: 5%;
 }
 
 /**Gestion des "petits" écrans */

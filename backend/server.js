@@ -15,7 +15,7 @@ const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'vote',
+  password: 'sacha',
   database: 'evote'
 })
 client.connect()
@@ -450,8 +450,11 @@ app.post('/api/addCandidat', async(req, res) => {
 
 //Affichage des candidats pour les modifier
 app.post('/api/affCandidat', async(req, res) => {
+  const idelection=req.body.idelection
+  console.log(idelection)
   const aff=await client.query({
-      text: 'SELECT *  FROM candidat',
+      text: 'SELECT *  FROM candidat C, participe P  WHERE P.idelection = $1 AND P.idcandidat = C.idcandidat;',
+      values : [idelection]
   });
   res.json(aff.rows)
 }),
@@ -465,16 +468,19 @@ app.post('/api/modCandidat', async(req, res) => {
   const parti = req.body.candidat.partipolitique
   const descri = req.body.candidat.descriptifprojet
 
+  console.log(id)
+
   if (nomc === '' || prenomc === '' || email === ''|| parti=== '' || descri=== '') {
     res.json({message:"remplir tous les champs"})    
     return
   }
   else{
-    await client.query({
+    aff = await client.query({
       text: 'UPDATE candidat SET nomc=$1, prenomc=$2, emailc=$3, partipolitique=$4, descriptifprojet=$5 WHERE idcandidat =$6',
       values: [nomc,prenomc,email,parti,descri,id]
     });
     res.json({mess:"Modifification effectuée"})
+    console.log(aff.rows)
   }
   
 }),

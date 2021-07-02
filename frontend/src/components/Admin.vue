@@ -70,6 +70,7 @@ h1 {
   display:flex;
   flex-direction: column;
   margin-bottom: 5%;
+  align-items: center;
   
 }
 .block{
@@ -78,13 +79,20 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  
-
-  
+  border: 3px solid #245fb8;
+  background-color: rgb(243, 243, 243);
+  padding-top: 5%;
+  padding-bottom: 5%;
+  width: 50%;
+  border-radius: 20px;
+}
+.block:hover{
+  background-color: rgba(189, 189, 189, 0.466);
 }
 li{
   list-style: none;
-  
+  font-size: 130%;
+  margin-top: 2%  
 }
 h3{
   margin-bottom:2%;

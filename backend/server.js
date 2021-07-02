@@ -207,7 +207,11 @@ app.post('/api/supElec', async(req, res) => {
   const result=await client.query({
     text: 'DELETE FROM participe WHERE idelection =$1',
     values: [idelection]
-});
+  });
+  const result2=await client.query({
+    text: 'DELETE FROM vote WHERE idelection =$1',
+    values: [idelection]
+  });
   const aff=await client.query({
       text: 'DELETE FROM election WHERE idelection =$1',
       values: [idelection]
@@ -290,7 +294,7 @@ app.post('/api/addVotant', async(req, res) => {
   else{
     const passwordHash = await bcrypt.hash(password, 10)
     await client.query({
-      text: 'INSERT INTO votant (nomv, prenomv, emailv, numelec,password, dejavote) values ($1,$2,$3,$4,$5,False)',
+      text: 'INSERT INTO votant (nomv, prenomv, emailv, numelec,password) values ($1,$2,$3,$4,$5)',
       values:[nomv, prenomv, emailv, numelec, passwordHash]
     })
     res.json({mess:"Votant ajoutée !"});
@@ -474,7 +478,7 @@ app.post('/api/modCandidat', async(req, res) => {
       text: 'UPDATE candidat SET nomc=$1, prenomc=$2, emailc=$3, partipolitique=$4, descriptifprojet=$5 WHERE idcandidat =$6',
       values: [nomc,prenomc,email,parti,descri,id]
     });
-    res.json({mess:"Modifification effectuée"})
+    res.json({mess:"Modification effectuée"})
   }
   
 }),
@@ -497,7 +501,7 @@ app.post('/api/supCandidat', async(req, res) => {
 app.post('/api/showStats', async(req, res) => {
   const idElection = req.body.election
   const enl=await client.query({
-    text: 'SELECT count( V.idcandidat), C.nomc from vote V , candidat C where idelection = $1 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
+    text: 'SELECT C.nomc, count( V.idcandidat) from vote V , candidat C where idelection = $1 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
     values:[idElection]
   })
   res.json({stats: enl.rows})

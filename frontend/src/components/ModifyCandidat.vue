@@ -35,11 +35,11 @@
       <div id=camod>
         <form @submit.prevent="modCandidat()" method="POST">
           <div id="modifFormCandidat">
-          <input type="text" v-model="ca.nomco" placeholder="Entrer son nom" required>
-          <input type="text" v-model="ca.prenomco" placeholder="Entrer son prenom" required>
-          <input type="text" v-model="ca.emailco" placeholder="Entrer son mail" required>
-          <input type="text" v-model="ca.partipolitiqueco" placeholder="Entrer son partie" required>
-          <input type="text" v-model="ca.descriptifprojetco" placeholder="Entrer son projet" required>
+          <input type="text" v-model="ca.nomc" placeholder="Entrer son nom" required>
+          <input type="text" v-model="ca.prenomc" placeholder="Entrer son prenom" required>
+          <input type="text" v-model="ca.emailc" placeholder="Entrer son mail" required>
+          <input type="text" v-model="ca.partipolitique" placeholder="Entrer son partie" required>
+          <input type="text" v-model="ca.descriptifprojet" placeholder="Entrer son projet" required>
           </div>
           <button type="submit" id="boutonModif" @click="modCandidat()">Modifier ce candidat</button>
           
@@ -47,7 +47,7 @@
         <button @click="deleteCandidat()" id="boutonSup">Supprimer ce candidat</button>
       </div>
   </div> 
-  <div class="response">
+  <div class="response" ref="response">
       {{ response }}
   </div> 
     
@@ -94,10 +94,12 @@ export default {
    //modif election
     async modCandidat(){
       this.ca.idcandidat = this.currentCandidat
+      console.log(this.ca)
       const modCandidat= await axios.post('/api/modCandidat', {
         candidat:this.ca
       });
-      this.response = modCandidat.data.mess
+      this.response = modCandidat.data.mess;
+      this.focus()
     },
     //supprimer election
     async deleteCandidat(){
@@ -106,6 +108,9 @@ export default {
         idcandidat : this.currentCandidat,
       });
       this.response = supCandidat.data.mess
+    },
+    focus() {
+      this.$refs.response.focus();
     }
   }
 

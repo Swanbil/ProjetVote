@@ -34,20 +34,23 @@
                 </p>
             </label>
             <button type="submit" id= "elecCheck" @click="ShowStatistiques()">Résultats des votes</button>
-
       </div>
-  </div> 
-  <div v-show="hasElec" v-for="candidat in stat" :key="candidat.nomc" class="response">
-      {{ candidat.nomc }}:{{ candidat.count }}  
-  </div> 
+    </div>
+  <div class="graph" v-show="hasElec">
+      <Chart class="chart" :def="def" :data="stat"></Chart>
+  </div>
 </div>    
 </div>
 </template>
 
 <script>
 import axios from "axios";
+import Chart from 'vue-chartless'
 export default {
   name: "showElection",
+  components:{
+    Chart
+  },
   data() {
     return {
       title: "Consulter les statistiques des élections",
@@ -63,6 +66,15 @@ export default {
       currentElection : '',
       response:'',
       stat :[],
+      def : {
+        type : 'bar'
+      },
+      data : [
+            { label: 'London', value:'330' },
+            { label: 'Barcelona', value:'430' },
+            { label: 'Paris', value:'150' },
+            { label: 'Belgrade', value:'220' }
+        ]
     };
   },
   methods:{
@@ -77,14 +89,22 @@ export default {
         
    //show stats
     async ShowStatistiques(){
-    
       this.el.idelection = this.currentElection
       const ShowStatistique= await axios.post('/api/showStats', {
         election:this.el.idelection
       });
-      this.stat = ShowStatistique.data.stats
-      this.hasElec = true
-      console.log(this.stat)
+      const res = ShowStatistique.data.stats
+      console.log(res)
+      const stat=[]
+      res.forEach(element => {
+        const row = {label:element.nomc, value:element.count}
+        stat.push(row)
+      });
+      this.stat = stat
+      if(this.stat.length >0){
+        this.hasElec = true
+      }
+      
     },
   }
 
@@ -116,7 +136,14 @@ h1 {
 .id{
     background-color: #af9b6f;
 }
-
+.chart{
+  width:90%;
+  
+}
+.graph{
+  margin-top:2%;
+  
+}
 .modifelec{
   display:flex;
   flex-direction: column;
@@ -134,7 +161,7 @@ h1 {
   background-color: rgb(243, 243, 243);
   padding-top: 5%;
   padding-bottom: 5%;
-  width: 40%;
+  width: 80%;
   border-radius: 20px;
   margin: auto;
   padding: auto;
@@ -165,5 +192,15 @@ button{
 input{
   margin-top:2%;
   margin-bottom: 2%
+}
+
+@media (max-width: 1250px) {
+    
+  .chart {
+    margin-top:5%;
+    margin-bottom:5%;
+    width:100%;
+  }
+
 }
 </style>

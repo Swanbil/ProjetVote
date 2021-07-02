@@ -15,7 +15,7 @@ const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'sacha',
+  password: 'vote',
   database: 'evote'
 })
 client.connect()
@@ -81,7 +81,6 @@ app.post("/api/login", async (req, res) => {
     text: 'SELECT COUNT(*) from administrateur WHERE loginadmin=$1',
     values: [user.numElec]
   })
-  console.log(result2.rows)
   //cas user est un votant
   if (result.rows[0].count == 1) {
     const result = await client.query({
@@ -108,11 +107,9 @@ app.post("/api/login", async (req, res) => {
       res.status(401).json({ message: 'Mot de passe inconu' })
       return
     }
-
   }
   //cas user est un administrateur
   if (result2.rows[0].count == 1) {
-    console.log("ok")
     const result = await client.query({
       text: 'SELECT * from administrateur WHERE loginadmin=$1',
       values: [user.numElec]
@@ -152,7 +149,6 @@ app.post('/api/addElection', async(req, res) => {
   const date = req.body.election.date
   const dateF = req.body.election.dateF
   const description = req.body.election.descri
-  console.log(categorie)
 
   // si un champ n'est pas rempli 
   if (categorie === '' || date === '' || dateF === '' || description=== '') {
@@ -164,7 +160,6 @@ app.post('/api/addElection', async(req, res) => {
     text: 'SELECT idcat FROM categorieelection WHERE electype =$1',
     values: [categorie]
   })
-  console.log(result.rows[0])
 
   await client.query({
     text: 'INSERT INTO election(datedebut, datefin, description, idcat) values ($1,$2,$3,$4)',
@@ -265,10 +260,7 @@ app.post('/api/vote', async(req,res) => {
   
 })
 
-//define the port
-app.listen(port, () => {
-  console.log(`Server listening on the port::${port}`);
-});
+
 
 //---------------- VOTANTS PART ---------------------------------
 
@@ -324,7 +316,6 @@ app.post('/api/modVotant', async(req, res) => {
   const email= req.body.votant.emailvo
   const numelec= req.body.votant.numeleco
   const password= req.body.votant.passwordo
-  console.log(id)
 
   if (nom === '' || prenom === '' || email === '' || numelec=== '' || password=== '') {
     res.json({message:"remplir tous les champs"})    
@@ -366,7 +357,7 @@ app.post('/api/addNews', async(req, res) => {
       text: 'INSERT INTO informationpolitiques (titreinf, descriptionsinf, image) values ($1,$2,$3)',
       values:[titre, description, image]
     })
-    res.json({mess:"news ajoutée !"});
+    res.json({mess:"Information ajoutée !"});
   }
 
   }),
@@ -387,7 +378,6 @@ app.post('/api/modNews', async(req, res) => {
   const titre = req.body.newi.titreinfo
   const descri = req.body.newi.descriptionsinfo
   const image= req.body.newi.imageo
-  console.log(id)
 
   if (titre === '' || descri === '' || image === '') {
     res.json({message:"remplir tous les champs"})    
@@ -407,7 +397,7 @@ app.post('/api/supNews', async(req, res) => {
       text: 'DELETE FROM informationpolitiques WHERE idinfopol =$1',
       values: [id]
   });
-  res.json({mess:"News supprimée"})
+  res.json({mess:"Information supprimée"})
 })
 
 
@@ -422,7 +412,6 @@ app.post('/api/addCandidat', async(req, res) => {
   const parti = req.body.candidat.partipolitique
   const descri = req.body.candidat.descriptifprojet
 
-  console.log(idelec)
 
   // si un champ n'est pas rempli 
   if (nomc === '' || prenomc === '' || email === '' || parti=== '' || descri=== '') {
@@ -435,7 +424,7 @@ app.post('/api/addCandidat', async(req, res) => {
     values: [nomc, prenomc]
   })
   if (result.rows[0].count >= 1) {
-    res.json({mess:"Votant deja existant !"});
+    res.json({mess:"Candidat deja existant !"});
     return
   }
   else{
@@ -443,7 +432,7 @@ app.post('/api/addCandidat', async(req, res) => {
       text: 'INSERT INTO candidat (nomc, prenomc, emailc,partipolitique, descriptifprojet ) values ($1,$2,$3,$4,$5)',
       values:[nomc, prenomc, email, parti, descri]
     })
-    res.json({mess:"Votant ajoutée !"});
+    res.json({mess:"Candidat ajoutée !"});
 
     const sql = "SELECT idcandidat FROM candidat WHERE nomc=$1 AND prenomc=$2"
     const result = await client.query({
@@ -465,7 +454,6 @@ app.post('/api/affCandidat', async(req, res) => {
       text: 'SELECT *  FROM candidat',
   });
   res.json(aff.rows)
-  //si il n'ya pas d'election erreur
 }),
 
 //Modifier un candidat
@@ -476,7 +464,6 @@ app.post('/api/modCandidat', async(req, res) => {
   const email = req.body.candidat.emailc
   const parti = req.body.candidat.partipolitique
   const descri = req.body.candidat.descriptifprojet
-  console.log(id)
 
   if (nomc === '' || prenomc === '' || email === ''|| parti=== '' || descri=== '') {
     res.json({message:"remplir tous les champs"})    
@@ -525,3 +512,9 @@ app.get('/api/infopol', async(req, res) => {
   res.json(news.rows)
   //si il n'ya pas d'election erreur
 })
+
+
+//define the port
+app.listen(port, () => {
+  console.log(`Server listening on the port::${port}`);
+});

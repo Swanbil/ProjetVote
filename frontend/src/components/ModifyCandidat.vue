@@ -129,8 +129,12 @@ h1 {
   text-align: center;
   background-color: #8ac57b;
   font-weight: bold;
+  margin-bottom:5%;
 }
 
+input{
+  padding:3%;
+}
 #modifCandidat{
   margin-top:3%;
   display:flex;

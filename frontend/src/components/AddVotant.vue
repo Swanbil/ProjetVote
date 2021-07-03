@@ -8,15 +8,17 @@
         <input type="text" v-model="votant.prenomv" placeholder="Entrez le prenom du votant" required/>
         <input type="email" v-model="votant.emailv" placeholder="Entrez l'email du votant" required/>
         <input type="text" v-model="votant.numelec" placeholder="Entrez le numero electeur du votant" required/>
-        <input type="text" v-model="votant.password" placeholder="Entrez le mdp du votant" required/>
+        <input type="password" v-model="votant.password" placeholder="Entrez le mdp du votant" required/>
         </div>
         <button type="submit">Valider</button>
       </form>
   </div>
 
-  <div class="response">
-      {{ response }}
-  </div>
+  <div class="response" >
+    <b-modal id="modal-1" title="Notification" centered>
+      <p class="my-4">{{response}}</p>
+    </b-modal>
+  </div> 
   
   </div>
 </template>
@@ -46,6 +48,7 @@ export default {
         votant:this.votant
       });
       this.response = response.data.mess
+      this.$bvModal.show('modal-1')
     }
   }
   
@@ -68,7 +71,6 @@ h1{
   margin-right:30%;
   margin-left:30%;
   text-align: center;
-  background-color: #8ac57b;
   font-weight: bold;
   margin-bottom:5%;
 }

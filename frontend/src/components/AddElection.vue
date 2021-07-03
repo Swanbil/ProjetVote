@@ -30,9 +30,11 @@
       </form>
   </div>
 
-  <div class="response">
-      {{ response }}
-  </div>
+  <div class="response" >
+    <b-modal id="modal-1" title="Notification" centered>
+      <p class="my-4">{{response}}</p>
+    </b-modal>
+  </div> 
   
   </div>
 </template>
@@ -61,6 +63,7 @@ export default {
         election:this.election
       });
       this.response = response.data.mess
+      this.$bvModal.show('modal-1')
     }
   }
   
@@ -83,7 +86,6 @@ h1{
   margin-right:30%;
   margin-left:30%;
   text-align: center;
-  background-color: #8ac57b;
   font-weight: bold;
   margin-bottom:5%;
 }

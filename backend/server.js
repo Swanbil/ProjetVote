@@ -15,7 +15,7 @@ const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'sacha',
+  password: 'vote',
   database: 'evote'
 })
 client.connect()
@@ -197,7 +197,7 @@ app.post('/api/modElec', async(req, res) => {
       text: 'UPDATE election SET datedebut=$1, datefin=$2, description=$3 WHERE idelection =$4',
       values: [date,dateF,description,idelection]
   });
-  res.json({mess:"Modifification effectuée"})
+  res.json({mess:"Modification effectuée"})
 })
 
 //supprimer une election

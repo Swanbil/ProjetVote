@@ -17,7 +17,6 @@ export default {
   async beforeMount(){
       const response = await axios.get('/api/elections')
       const elec = response.data.elections
-      console.log(elec)
       const elections = []
       elec.forEach(el => {
           const row = {Election:el.electype,Date_debut:el.datedebut,Date_Fin:el.datefin,Description:el.description}

@@ -8,7 +8,7 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav >
         <b-nav-item class="px-2"><router-link :to="{ name: 'Home' }" class="logo">Home</router-link></b-nav-item>
-        <b-nav-item class="px-2"><router-link to="/vote">Vote</router-link></b-nav-item>
+        <b-nav-item v-if="!isAdmin" class="px-2"><router-link to="/vote">Vote</router-link></b-nav-item>
         <b-nav-item v-if="isAdmin" class="px-2"><router-link to="/admin">Admin</router-link></b-nav-item>
       </b-navbar-nav>
 

@@ -39,7 +39,6 @@ export default {
     this.response=''
     const affNews= await axios.get('/api/infopol',{});
     this.news = affNews.data
-    console.log("info",this.news)
 
   }
 };

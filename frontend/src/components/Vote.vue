@@ -51,9 +51,11 @@
       </div>
     </div>
 
-    <div class="response" :style="'background-color:'+colorRep">
-      {{ response }}
-    </div>
+    <div class="response" >
+    <b-modal id="modal-1" title="Notification" centered>
+      <p class="my-4">{{response}}</p>
+    </b-modal>
+  </div> 
   </div>
 </template>
 
@@ -74,7 +76,6 @@ export default {
       candidats: [],
       showElection: true,
       response: '',
-      colorRep:''
     };
   },
   props: {
@@ -90,10 +91,8 @@ export default {
       });
       this.candidats = response.data.candidats;
       this.showElection = false;
-      this.colorRep='rgb(122, 180, 94)'
       } catch (error) {
         this.response = error.response.data.message;
-        this.colorRep='rgb(196, 105, 105)'
       }
     },
 
@@ -104,7 +103,7 @@ export default {
         idCandidat: this.currentCandidat,
       });
       this.response = response.data.message;
-      this.colorRep='rgb(122, 180, 94)'
+      this.$bvModal.show('modal-1')
     },
   },
 

@@ -15,7 +15,7 @@ const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'vote',
+  password: 'sacha',
   database: 'evote'
 })
 client.connect()
@@ -499,6 +499,10 @@ app.post('/api/supCandidat', async(req, res) => {
       text: 'DELETE FROM candidat WHERE idcandidat =$1',
       values: [id]
   });
+  const affi=await client.query({
+    text: 'DELETE FROM vote WHERE idcandidat =$1',
+    values: [id]
+});
   res.json({mess:"Votant supprimée"})
 });
 

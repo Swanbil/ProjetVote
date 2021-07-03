@@ -16,7 +16,7 @@
           <button id="boutonValid">Valider</button>
         </div>       
       </form>
-    <div class ="affichageElec">
+    
     <div  v-for="election in elections" v-bind:key="election.idelection" id="elecResult">
       <input type="radio" v-model="currentElection" :id="election.id" :value="election.idelection" checked>
         <label :for="election.id">
@@ -55,7 +55,7 @@
         </form>
         <button @click="deleteCandidat()" id="boutonSup">Supprimer ce candidat</button>
       </div>
-    </div>
+    
   </div> 
   <div class="response" >
     <b-modal id="modal-1" title="Notification" centered>
@@ -215,6 +215,7 @@ button{
   display: flex;
   flex-direction: column;
   margin-bottom: 8%;
+
 }
 
 input{

@@ -55,7 +55,7 @@ app.post('/api/register', async (req, res) => {
   }
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
-    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,false)"
+    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password) VALUES ($1, $2,$3,$4,$5)"
     //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,
@@ -202,20 +202,28 @@ app.post('/api/modElec', async(req, res) => {
 
 //supprimer une election
 app.post('/api/supElec', async(req, res) => {
-
   const idelection= req.body.idelection
+
+  const affi=await client.query({
+    text: 'DELETE FROM candidat USING participe WHERE participe.idcandidat=candidat.idcandidat AND participe.idelection =$1',
+    values: [idelection]
+  });
+
   const result=await client.query({
     text: 'DELETE FROM participe WHERE idelection =$1',
     values: [idelection]
   });
+  
   const result2=await client.query({
     text: 'DELETE FROM vote WHERE idelection =$1',
     values: [idelection]
   });
   const aff=await client.query({
-      text: 'DELETE FROM election WHERE idelection =$1',
-      values: [idelection]
-  });
+    text: 'DELETE FROM election WHERE idelection =$1',
+    values: [idelection]
+});
+  
+
   res.json({mess:"Election supprimée"})
 })
 
@@ -491,6 +499,10 @@ app.post('/api/modCandidat', async(req, res) => {
 //supprimer un candidat
 app.post('/api/supCandidat', async(req, res) => {
   const id= req.body.idcandidat
+  const affi=await client.query({
+    text: 'DELETE FROM vote WHERE idcandidat =$1',
+    values: [id]
+});
   const enl=await client.query({
     text: 'DELETE FROM participe WHERE idcandidat =$1',
     values: [id]
@@ -499,10 +511,7 @@ app.post('/api/supCandidat', async(req, res) => {
       text: 'DELETE FROM candidat WHERE idcandidat =$1',
       values: [id]
   });
-  const affi=await client.query({
-    text: 'DELETE FROM vote WHERE idcandidat =$1',
-    values: [id]
-});
+  
   res.json({mess:"Votant supprimée"})
 });
 

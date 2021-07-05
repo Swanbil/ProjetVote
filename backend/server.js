@@ -49,13 +49,22 @@ app.post('/api/register', async (req, res) => {
     text: sql,
     values: [user.numElec]
   })
+  const sql2 = "SELECT COUNT(*) FROM etat WHERE numelec=$1"
+  const result2 = await client.query({
+    text: sql2,
+    values: [user.numElec]
+  })
   if (result.rows[0].count >= 1) {
     res.status(400).json({ message: 'Cet utilisateur existe deja' })
     return
   }
+  if(result2.rows[0].count == 0){
+    res.status(400).json({ message: "Vous n'etes pas inscris sur la liste electorale. Veuillez vous inscrire auprès de votre mairie" })
+    return
+  }
   else {
     const passwordHash = await bcrypt.hash(user.password, 10)
-    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password,dejavote) VALUES ($1, $2,$3,$4,$5,false)"
+    const sql = "INSERT INTO votant (nomv,prenomv,emailv,numelec,password) VALUES ($1, $2,$3,$4,$5)"
     //const sql = "INSERT INTO administrateur (loginadmin,motdepasseadmin,nomadmin,prenomadmin,emailadmin) VALUES ($1, $2,$3,$4,$5)"
     const result = await client.query({
       text: sql,

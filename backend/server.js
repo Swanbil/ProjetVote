@@ -15,7 +15,7 @@ const { Client } = require('pg')
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'vote',
+  password: 'sacha',
   database: 'evote'
 })
 client.connect()
@@ -211,20 +211,28 @@ app.post('/api/modElec', async(req, res) => {
 
 //supprimer une election
 app.post('/api/supElec', async(req, res) => {
-
   const idelection= req.body.idelection
+
+  const affi=await client.query({
+    text: 'DELETE FROM candidat USING participe WHERE participe.idcandidat=candidat.idcandidat AND participe.idelection =$1',
+    values: [idelection]
+  });
+
   const result=await client.query({
     text: 'DELETE FROM participe WHERE idelection =$1',
     values: [idelection]
   });
+  
   const result2=await client.query({
     text: 'DELETE FROM vote WHERE idelection =$1',
     values: [idelection]
   });
   const aff=await client.query({
-      text: 'DELETE FROM election WHERE idelection =$1',
-      values: [idelection]
-  });
+    text: 'DELETE FROM election WHERE idelection =$1',
+    values: [idelection]
+});
+  
+
   res.json({mess:"Election supprimée"})
 })
 
@@ -500,6 +508,10 @@ app.post('/api/modCandidat', async(req, res) => {
 //supprimer un candidat
 app.post('/api/supCandidat', async(req, res) => {
   const id= req.body.idcandidat
+  const affi=await client.query({
+    text: 'DELETE FROM vote WHERE idcandidat =$1',
+    values: [id]
+});
   const enl=await client.query({
     text: 'DELETE FROM participe WHERE idcandidat =$1',
     values: [id]
@@ -508,6 +520,7 @@ app.post('/api/supCandidat', async(req, res) => {
       text: 'DELETE FROM candidat WHERE idcandidat =$1',
       values: [id]
   });
+  
   res.json({mess:"Votant supprimée"})
 });
 

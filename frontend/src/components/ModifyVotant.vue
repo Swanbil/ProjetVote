@@ -20,9 +20,9 @@
             <input type="email" v-model="vo.emailvo" placeholder="Entrer l'email du votant" required>
             <input type="password" v-model="vo.passwordo" placeholder="Entrer le mdp du votant" required>
             </div>
-            <button type="submit" @click="modVotant()" id= "buttonMod">Modifier ce votant</button>
+            <input type="submit" id= "buttonMod" value="Modifier ce votant">
         </form>
-      <button @click="deleteVotant()" id="buttonSupp">Supprimer cette election</button>
+      <button @click="deleteVotant()" id="buttonSupp">Supprimer ce votant</button>
 
     </div>
     </div>

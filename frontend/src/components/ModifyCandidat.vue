@@ -51,7 +51,7 @@
           <input type="text" v-model="ca.partipolitique" placeholder="Entrer son partie" required>
           <input type="text" v-model="ca.descriptifprojet" placeholder="Entrer son projet" required>
           </div>
-          <button type="submit" id="boutonModif" @click="modCandidat()">Modifier ce candidat</button>   
+          <input type="submit" id="boutonModif" value="Modifier ce candidat">  
         </form>
         <button @click="deleteCandidat()" id="boutonSup">Supprimer ce candidat</button>
       </div>

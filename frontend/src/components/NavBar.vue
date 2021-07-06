@@ -29,7 +29,7 @@
 
 
 <script>
-
+import axios from "axios";
 export default {
   name: "NavBar",
   props:{
@@ -43,12 +43,14 @@ export default {
     };
   },
   methods:{
-    logOut(){
+    async logOut(){
       this.stateIsLog = false
       this.stateIsAdmin = false
       localStorage.removeItem('token')
       this.$emit('clicked', this.stateIsLog)
       this.$emit('changeAdmin', this.stateIsAdmin)
+      const response = await axios.post('/api/logout')
+      console.log('resp logout = ',response.data.message)
       this.$router.push({name:'Home'})
     }
   }

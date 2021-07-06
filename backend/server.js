@@ -154,6 +154,10 @@ app.post("/api/login", async (req, res) => {
   }
 })
 
+app.post('/api/logout', async (req,res) => {
+  req.session.destroy()
+  res.json({message:'ok'})
+})
 //------------------ ELECTIONS PART ----------------------------
 
 //Ajout d'élections

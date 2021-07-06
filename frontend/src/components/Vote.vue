@@ -52,7 +52,7 @@
     </div>
 
     <div class="response" >
-      <b-modal id="modal-1" title="Notification" centered>
+      <b-modal id="modal-1" title="Notification" @ok="goHome()" centered>
         <p class="my-4">{{response}}</p>
       </b-modal>
     </div> 
@@ -105,9 +105,12 @@ export default {
       });
       this.response = response.data.message;
       this.$bvModal.show('modal-1')
-      setTimeout(function(){this.$router.push({name:'Home'})}, 5000);
+      
       
     },
+    goHome(){
+      this.$router.push({name:'Home'})
+    }
   },
 
   async mounted() {

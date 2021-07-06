@@ -29,7 +29,7 @@
 
 
 <script>
-import Cookies from 'js-cookie';
+
 export default {
   name: "NavBar",
   props:{
@@ -46,7 +46,7 @@ export default {
     logOut(){
       this.stateIsLog = false
       this.stateIsAdmin = false
-      Cookies.remove('connect.sid')
+      localStorage.removeItem('token')
       this.$emit('clicked', this.stateIsLog)
       this.$emit('changeAdmin', this.stateIsAdmin)
       this.$router.push({name:'Home'})

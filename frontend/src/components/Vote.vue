@@ -1,8 +1,8 @@
 <template>
   <div class="vote">
     <h1>{{ title }}</h1>
-    <p v-if="isLog && !isAdmin">Here, you can vote</p>
-    <p v-else>Connect to your vote account if you want to vote</p>
+    <p v-if="isLog && !isAdmin">Vous pouvez voter pour les elections suivantes</p>
+    <p v-else>Connectez vous à votre compte si vous voulez voter</p>
     <div>
       <div v-show="showElection" v-if="isLog && !isAdmin" class="elections">
         <div
@@ -52,10 +52,10 @@
     </div>
 
     <div class="response" >
-    <b-modal id="modal-1" title="Notification" centered>
-      <p class="my-4">{{response}}</p>
-    </b-modal>
-  </div> 
+      <b-modal id="modal-1" title="Notification" centered>
+        <p class="my-4">{{response}}</p>
+      </b-modal>
+    </div> 
   </div>
 </template>
 
@@ -93,6 +93,7 @@ export default {
       this.showElection = false;
       } catch (error) {
         this.response = error.response.data.message;
+        this.$bvModal.show('modal-1')
       }
     },
 
@@ -104,6 +105,8 @@ export default {
       });
       this.response = response.data.message;
       this.$bvModal.show('modal-1')
+      setTimeout(function(){this.$router.push({name:'Home'})}, 5000);
+      
     },
   },
 

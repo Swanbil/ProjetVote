@@ -9,13 +9,14 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const { Client } = require('pg')
 
 //database configuration
 const client = new Client({
   user: 'postgres',
   host: 'localhost',
-  password: 'sacha',
+  password: 'vote',
   database: 'evote'
 })
 client.connect()
@@ -40,6 +41,7 @@ app.get('/', (req, res) => {
 //Route to register a new user
 app.post('/api/register', async (req, res) => {
   const user = req.body
+  console.log(user)
   if (user.numElec === '' || user.password === '' || user.name === '' || user.lastName === '' || user.email === '') {
     res.status(400).json({ message: 'Veuillez remplir tous les champs' })
     return
@@ -105,9 +107,10 @@ app.post("/api/login", async (req, res) => {
       else {
         req.session.userId = result.rows[0].idutilisateur
         console.log("session id = ",req.session.userId)
+        const token = jwt.sign({ log: true, admin:false},'RANDOM_TOKEN_SECRET',{ expiresIn: '24h' });
         res.json({
           message: 'Bienvenue ',
-          isAdmin: false
+          token: token
         })
         console.log("Authentification réussie")
       }
@@ -131,9 +134,10 @@ app.post("/api/login", async (req, res) => {
       }
       else {
         req.session.userId = result.rows[0].idutilisateur
+        const token = jwt.sign({ log: true, admin:true},'RANDOM_TOKEN_SECRET',{ expiresIn: '24h' });
         res.json({
           message: 'Bienvenue ',
-          isAdmin: true
+          token: token
         })
         console.log("Authentification réussie")
       }
@@ -283,42 +287,7 @@ app.post('/api/vote', async(req,res) => {
 
 
 
-//---------------- VOTANTS PART ---------------------------------
-
-//Ajout de votant
-app.post('/api/addVotant', async(req, res) => {
-  const nomv = req.body.votant.nomv
-  const prenomv = req.body.votant.prenomv
-  const emailv = req.body.votant.emailv
-  const numelec = req.body.votant.numelec
-  const password = req.body.votant.password
-
-
-  // si un champ n'est pas rempli 
-  if (nomv === '' || prenomv === '' || emailv === '' || numelec=== '' || password=== '') {
-    res.status(400).json({ message: 'Veuillez remplir tous les champs' })
-    return
-  }
-  const sql = "SELECT COUNT(*) FROM votant WHERE numelec=$1"
-  const result = await client.query({
-    text: sql,
-    values: [numelec]
-  })
-  if (result.rows[0].count >= 1) {
-    res.json({mess:"Votant deja existant !"});
-    return
-  }
-  else{
-    const passwordHash = await bcrypt.hash(password, 10)
-    await client.query({
-      text: 'INSERT INTO votant (nomv, prenomv, emailv, numelec,password) values ($1,$2,$3,$4,$5)',
-      values:[nomv, prenomv, emailv, numelec, passwordHash]
-    })
-    res.json({mess:"Votant ajoutée !"});
-  }
-
-  }),
-
+//---------------- VOTANTS PART --------------------------------
 
 //Affichage des votants pour les modifier
 app.post('/api/affVotant', async(req, res) => {
@@ -335,18 +304,17 @@ app.post('/api/modVotant', async(req, res) => {
   const nom = req.body.votant.nomvo
   const prenom = req.body.votant.prenomvo
   const email= req.body.votant.emailvo
-  const numelec= req.body.votant.numeleco
   const password= req.body.votant.passwordo
 
-  if (nom === '' || prenom === '' || email === '' || numelec=== '' || password=== '') {
+  if (nom === '' || prenom === '' || email === ''  || password=== '') {
     res.json({message:"remplir tous les champs"})    
     return
   }
   
   const passwordHash = await bcrypt.hash(password, 10)
   const aff=await client.query({
-      text: 'UPDATE votant SET nomv=$1, prenomv=$2, emailv=$3, numelec=$4, password=$5 WHERE idutilisateur =$6',
-      values: [nom,prenom,email,numelec,passwordHash, id]
+      text: 'UPDATE votant SET nomv=$1, prenomv=$2, emailv=$3, password=$4 WHERE idutilisateur =$5',
+      values: [nom,prenom,email,passwordHash, id]
   });
   res.json({mess:"Modifification effectuée"})
 }),

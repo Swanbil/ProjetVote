@@ -14,8 +14,8 @@
         <New :candidat="newi.titreinf" :description="newi.descriptionsinf" :image="newi.image" width="100%" height="600" :partiPol="newi.titreinf" ></New>
       </div>
 
-      </div>
     </div>
+  </div>
   
 </template>
 

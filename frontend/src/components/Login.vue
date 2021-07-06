@@ -39,6 +39,8 @@
 </template>
 
 <script>
+const jwt = require('jsonwebtoken')
+
 import axios from "axios";
 export default {
   name: "Login",
@@ -61,10 +63,12 @@ export default {
     async logUser() {
       try{
         const response = await axios.post("/api/login", this.user);
-        console.log(response.data)
-        this.stateIsAdmin = response.data.isAdmin
-        this.stateIsLog = true
-        //localStorage.setItem('token',this.stateIsLog)
+        const token = response.data.token
+        localStorage.setItem('token',token)
+        const decodeToken = jwt.decode(token)
+        console.log(decodeToken)
+        this.stateIsAdmin = decodeToken.admin
+        this.stateIsLog = decodeToken.log
         this.$emit('clicked', this.stateIsLog)
         this.$emit('changeAdmin', this.stateIsAdmin)
         this.$router.push({name:'Home'})

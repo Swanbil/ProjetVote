@@ -4,11 +4,11 @@
     <div id="ajoutVotant">
      <form @submit.prevent="addVotant()" method="POST">
        <div id="formAddVotant">
-        <input type="text" v-model="votant.nomv" placeholder="Entrez le nom du votant" required/>
-        <input type="text" v-model="votant.prenomv" placeholder="Entrez le prenom du votant" required/>
-        <input type="email" v-model="votant.emailv" placeholder="Entrez l'email du votant" required/>
-        <input type="text" v-model="votant.numelec" placeholder="Entrez le numero electeur du votant" required/>
-        <input type="password" v-model="votant.password" placeholder="Entrez le mdp du votant" required/>
+        <input type="text" v-model="user.name" placeholder="Entrez le nom du votant" required/>
+        <input type="text" v-model="user.lastName" placeholder="Entrez le prenom du votant" required/>
+        <input type="email" v-model="user.email" placeholder="Entrez l'email du votant" required/>
+        <input type="text" v-model="user.numElec" placeholder="Entrez le numero electeur du votant" required/>
+        <input type="password" v-model="user.password" placeholder="Entrez le mdp du votant" required/>
         </div>
         <button type="submit">Valider</button>
       </form>
@@ -30,12 +30,12 @@ export default {
   data(){
     return{
       title:'Ajouter un votant',
-      votant:{
-        nomv:'',
-        prenomv: '',
-        emailv: '',
-        numelec: '',
-        password : '',
+      user:{
+        numElec: "",
+        lastName: "",
+        name: "",
+        email: "",
+        password: ""  
       },
       response:''
       
@@ -44,10 +44,10 @@ export default {
   },
   methods:{
       async addVotant(){
-      const response = await axios.post('/api/addVotant', {
-        votant:this.votant
-      });
-      this.response = response.data.mess
+      const response = await axios.post('/api/register', 
+        this.user
+      );
+      this.response = response.data.message
       this.$bvModal.show('modal-1')
     }
   }

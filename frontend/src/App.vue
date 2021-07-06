@@ -21,7 +21,7 @@
 <script>
 import NavBar from "./components/NavBar.vue";
 import Footer from "./components/Footer.vue";
-import Cookies from 'js-cookie';
+const jwt = require('jsonwebtoken')
 
 export default {
   name: "App",
@@ -36,7 +36,6 @@ export default {
     };
   },
   methods: {
-    
     onChangeLog(value) {
       this.isLog = value;
     },
@@ -46,11 +45,15 @@ export default {
   },
   //check while refreshing that the user is always connected
   mounted(){
-      const cookieLog =Cookies.get('connect.sid')
-      if(cookieLog !==undefined){
-        this.isLog = true
+      const token =localStorage.getItem('token')
+      if(token !== null){
+        const decodeToken = jwt.decode(token)
+        this.isLog = decodeToken.log
+        this.isAdmin = decodeToken.admin
       }
-      
+      else{
+        this.isLog = false
+      }
     },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-form">
+  <form class="login-form" @submit.prevent="registerUser()" method="POST">
     <div class="form">
       <h2 class="text-center">Inscription</h2>
       <div class="form-group">
@@ -31,11 +31,11 @@
       </div>
       <div class="form-group">
         <input
-          type="text"
+          type="email"
           v-model="newUser.email"
           class="form-control"
           placeholder="email"
-          required="required"
+          required
         />
       </div>
 
@@ -49,9 +49,7 @@
         />
       </div>
       <div class="form-group">
-        <button type="submit" @click="registerUser()" class="btn btn-block">
-          Inscription
-        </button>
+        <input type="submit" value="Inscription" class="btn btn-block">
       </div>
     </div>
 
@@ -62,7 +60,7 @@
         {{ response.text }}
     </div>
 
-  </div>
+  </form>
 </template>
 
 <script>

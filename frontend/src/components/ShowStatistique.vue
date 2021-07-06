@@ -97,7 +97,7 @@ export default {
       console.log(res)
       const stat=[]
       res.forEach(element => {
-        const row = {label:element.nomc, value:element.count}
+        const row = {label:element.nomc, value:element.compteur}
         stat.push(row)
       });
       this.stat = stat

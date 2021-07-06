@@ -235,6 +235,10 @@ app.post('/api/supElec', async(req, res) => {
     text: 'DELETE FROM vote WHERE idelection =$1',
     values: [idelection]
   });
+  const result3=await client.query({
+    text: 'DELETE FROM avote WHERE idelection =$1',
+    values: [idelection]
+  });
   const aff=await client.query({
     text: 'DELETE FROM election WHERE idelection =$1',
     values: [idelection]
@@ -256,7 +260,7 @@ app.post('/api/candidats', async(req,res) => {
   const idElection = req.body.idElection
   const idVotant = req.session.userId
   const result = await client.query({
-    text:'Select COUNT(*) from vote WHERE idutilisateur=$1 AND idelection=$2',
+    text:'Select COUNT(*) from avote WHERE idutilisateur=$1 AND idelection=$2',
     values:[idVotant,idElection]
   })
   if (result.rows[0].count >= 1) {
@@ -281,9 +285,25 @@ app.post('/api/vote', async(req,res) => {
   const idVotant = req.session.userId
   const date = new Date().getFullYear()+'-'+("0"+(new Date().getMonth()+1)).slice(-2)+'-'+("0"+new Date().getDate()).slice(-2)
   const result = await client.query({
-    text:'INSERT INTO vote (idutilisateur,idcandidat,datevote,idelection) VALUES ($1,$2,$3,$4)',
-    values:[idVotant,idCandidat,date,idElection]
+    text:'INSERT INTO avote (idutilisateur,idelection,datevote) VALUES ($1,$2,$3)',
+    values:[idVotant,idElection,date]
   })
+  const result2 = await client.query({
+    text:'SELECT COUNT(*) from vote WHERE idelection = $1 and idcandidat = $2',
+    values:[idElection,idCandidat]
+  })
+  if(result2.rows[0].count == 0){
+    const result2 = await client.query({
+      text:'INSERT INTO vote (idelection,idcandidat,compteur) VALUES ($1,$2,$3)',
+      values:[idElection,idCandidat,1]
+    })
+  }
+  else{
+    const result2 = await client.query({
+      text:'UPDATE vote SET compteur = compteur + 1 WHERE idcandidat = $1 and idelection = $2 ',
+      values:[idCandidat,idElection]
+    })
+  }
   res.json({message:'A voté !'})
   
   
@@ -493,14 +513,14 @@ app.post('/api/supCandidat', async(req, res) => {
       values: [id]
   });
   
-  res.json({mess:"Votant supprimée"})
+  res.json({mess:"Candidat supprimée"})
 });
 
 //--------------STATS PART----------------------
 app.post('/api/showStats', async(req, res) => {
   const idElection = req.body.election
   const enl=await client.query({
-    text: 'SELECT C.nomc, count( V.idcandidat) from vote V , candidat C where idelection = $1 AND V.idcandidat=C.idcandidat GROUP BY nomc;',
+    text: 'SELECT C.nomc, V.compteur from vote V , candidat C where idelection = $1 AND V.idcandidat=C.idcandidat ',
     values:[idElection]
   })
   res.json({stats: enl.rows})

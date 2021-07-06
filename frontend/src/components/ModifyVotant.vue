@@ -18,7 +18,7 @@
             <input type="text" v-model="vo.nomvo" placeholder="Entrer le nom du votant" required>
             <input type="text" v-model="vo.prenomvo" placeholder="Entrer le prenom du votant" required>
             <input type="email" v-model="vo.emailvo" placeholder="Entrer l'email du votant" required>
-            <input type="text" v-model="vo.passwordo" placeholder="Entrer le mdp du votant" required>
+            <input type="password" v-model="vo.passwordo" placeholder="Entrer le mdp du votant" required>
             </div>
             <button type="submit" @click="modVotant()" id= "buttonMod">Modifier ce votant</button>
         </form>

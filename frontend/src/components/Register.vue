@@ -31,7 +31,7 @@
       </div>
       <div class="form-group">
         <input
-          type="text"
+          type="email"
           v-model="newUser.email"
           class="form-control"
           placeholder="email"

@@ -1,3 +1,4 @@
+E-vote : site de vote à distance
 CONFIGURATION :
 Depuis le terminal :
     -Dans le dossier backend : 
